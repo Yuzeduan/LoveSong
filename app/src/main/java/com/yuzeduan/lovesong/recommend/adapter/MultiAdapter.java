@@ -1,9 +1,9 @@
 package com.yuzeduan.lovesong.recommend.adapter;
 
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +12,10 @@ import com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory;
 import com.yuzeduan.lovesong.recommend.adapter.factory.TypeFactory;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.BannerHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.BaseViewHolder;
-import com.yuzeduan.lovesong.recommend.adapter.viewholder.PatternHolder;
+import com.yuzeduan.lovesong.recommend.adapter.viewholder.HotSongListHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.PatternNameHolder;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
+import com.yuzeduan.lovesong.recommend.bean.HotSongList;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.PA
 public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private TypeFactory mFactory;
     private List<FocusPic> mPicList;
+    private List<HotSongList> mHotSongList;
 
     public MultiAdapter(List<FocusPic> mPicList) {
         this.mPicList = mPicList;
@@ -34,7 +36,7 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent,false);
-        return mFactory.createViewHolder(viewType, view);
+        return mFactory.createViewHolder(viewType, view, parent.getContext());
     }
 
     @Override
@@ -43,14 +45,17 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             ((BannerHolder) holder).bindViewData(mPicList);
         }else if(holder instanceof PatternNameHolder){
             ((PatternNameHolder) holder).bindViewData(position);
-        }else if(holder instanceof PatternHolder){
-            ((PatternHolder) holder).bindViewData(position);
+        }else if(holder instanceof HotSongListHolder){
+            if(mHotSongList != null && !mHotSongList.isEmpty()){
+                HotSongList data = mHotSongList.get(position - 2);
+                ((HotSongListHolder) holder).bindViewData(data);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return 22;
+        return 8;
     }
 
 
@@ -81,5 +86,10 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
             });
         }
+    }
+
+    public void setmHotSongList(List<HotSongList> mHotSongList) {
+        this.mHotSongList = mHotSongList;
+        notifyDataSetChanged();
     }
 }

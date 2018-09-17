@@ -7,7 +7,9 @@
     <ImageView
         android:id="@+id/rec_imv"
         android:layout_width="120dp"
-        android:layout_height="120dp" />
+        android:layout_height="120dp"
+        android:layout_margin="1dp"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/rec_img_info_tv"

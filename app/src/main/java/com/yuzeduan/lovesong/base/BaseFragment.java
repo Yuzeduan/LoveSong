@@ -2,6 +2,7 @@ package com.yuzeduan.lovesong.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 public abstract class BaseFragment <V, P extends BasePresenter<V>> extends LazyFragment{
     protected P mPresenter;

@@ -1,5 +1,6 @@
 package com.yuzeduan.lovesong.recommend.adapter.factory;
 
+import android.content.Context;
 import android.view.View;
 
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.BaseViewHolder;
@@ -21,6 +22,6 @@ public interface TypeFactory {
      * @param type
      * @return
      */
-    BaseViewHolder createViewHolder(int type, View itemView);
+    BaseViewHolder createViewHolder(int type, View itemView, Context context);
 
 }
