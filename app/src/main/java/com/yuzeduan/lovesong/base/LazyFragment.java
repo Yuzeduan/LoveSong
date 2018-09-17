@@ -24,7 +24,6 @@ public abstract class LazyFragment extends Fragment{
         isPrepared = true;
         initVariables();
         lazyLoad();
-        Log.d("oncreatView", "onCreateView: "+"调用了");
         return mView;
     }
 
@@ -34,7 +33,6 @@ public abstract class LazyFragment extends Fragment{
         Log.d("setUserVisible", "setUserVisibleHint: 调用了");
         if(getUserVisibleHint()) {
             isVisible = true;
-            Log.d("setUserVisibile", "setUserVisibleHint: 可见了");
             onVisible();
         } else {
             isVisible = false;

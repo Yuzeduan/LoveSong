@@ -1,5 +1,6 @@
 package com.yuzeduan.lovesong.recommend.model;
 
+import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.bean.HotSongList;
 import com.yuzeduan.lovesong.util.HttpUtil;
@@ -37,8 +38,20 @@ public class RecModel {
             }
         });
     }
+
+    public void getAlbumListData(){
+        String address = MusicApi.Album.recommendAlbum(0,6);
+        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+            @Override
+            public void onFinish(String str) {
+                List<AlbumList> list = ParseUtil.parseAlbumList(str);
+                mListener.onAlbumListDataFinish(list);
+            }
+        });
+    }
     public interface RecListener {
         void onBannerDataFinish(List<FocusPic> list);
         void onHotSongListDataFinish(List<HotSongList> list);
+        void onAlbumListDataFinish(List<AlbumList> list);
     }
 }

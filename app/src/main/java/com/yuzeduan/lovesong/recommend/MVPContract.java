@@ -1,5 +1,6 @@
 package com.yuzeduan.lovesong.recommend;
 
+import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.bean.HotSongList;
 
@@ -13,10 +14,12 @@ public class MVPContract {
     public interface IView {
         void showBanner(List<FocusPic> list);
         void showHotSongList(List<HotSongList> list);
+        void showAlbumList(List<AlbumList> list);
     }
 
     public interface IPresenter {
         void getBannerData();
         void getHotSongListData();
+        void getAlbumListData();
     }
 }

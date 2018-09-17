@@ -13,6 +13,7 @@ import com.yuzeduan.lovesong.R;
 import com.yuzeduan.lovesong.base.BaseFragment;
 import com.yuzeduan.lovesong.recommend.MVPContract;
 import com.yuzeduan.lovesong.recommend.adapter.MultiAdapter;
+import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.bean.HotSongList;
 import com.yuzeduan.lovesong.recommend.presenter.RecPresenter;
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> implements MVPContract.IView{
     private static final int FINISH_BANNERDATA = 1;
+    private static final int FINISH_HOTSONGLISTDATA = 2;
 
     private RecyclerView mRecyclerView;
     private MultiAdapter mMultiAdapter;
@@ -66,6 +68,14 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
     @Override
     public void showHotSongList(List<HotSongList> list) {
         mMultiAdapter.setmHotSongList(list);
+        Message message = Message.obtain();
+        message.what = FINISH_HOTSONGLISTDATA;
+        mFragmentHandler.sendMessage(message);
+    }
+
+    @Override
+    public void showAlbumList(List<AlbumList> list) {
+        mMultiAdapter.setmAlbumList(list);
     }
 
     private static class FragmentHandler extends Handler{
@@ -81,6 +91,8 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
                 case FINISH_BANNERDATA:
                     recFragmentWeakReference.get().mPresenter.getHotSongListData();
                     break;
+                case FINISH_HOTSONGLISTDATA:
+                    recFragmentWeakReference.get().mPresenter.getAlbumListData();
             }
         }
     }

@@ -2,6 +2,7 @@ package com.yuzeduan.lovesong.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.bean.HotSongList;
 
@@ -46,5 +47,25 @@ public class ParseUtil {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 用于解析专辑数据
+     * @param jsonData
+     * @return
+     */
+    public static List<AlbumList> parseAlbumList(String jsonData){
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONObject plazeAlbumList = jsonObject.getJSONObject("plaze_album_list");
+            JSONObject rm = plazeAlbumList.getJSONObject("RM");
+            JSONObject albumList = rm.getJSONObject("album_list");
+            String data = albumList.getString("list");
+            return sGson.fromJson(data, new TypeToken<List<AlbumList>>(){}.getType());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }
