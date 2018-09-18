@@ -24,6 +24,7 @@ public abstract class LazyFragment extends Fragment{
         isPrepared = true;
         initVariables();
         lazyLoad();
+        refreshView();
         return mView;
     }
 
@@ -47,5 +48,6 @@ public abstract class LazyFragment extends Fragment{
     protected abstract View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
     protected abstract void initVariables();
     protected abstract void lazyLoad();
+    protected abstract void refreshView();
 
 }

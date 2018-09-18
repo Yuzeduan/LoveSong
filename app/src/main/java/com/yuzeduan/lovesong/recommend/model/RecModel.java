@@ -49,9 +49,44 @@ public class RecModel {
             }
         });
     }
+
+    public void getRefreshBannerData(){
+        String address = MusicApi.focusPic(0);
+        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+            @Override
+            public void onFinish(String str) {
+                List<FocusPic> list = ParseUtil.parseFocusPic(str);
+                mListener.onRefreshBannerDataFinish(list);
+            }
+        });
+    }
+
+    public void getRefreshHotSongListData(){
+        String address = MusicApi.GeDan.hotGeDan(0);
+        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+            @Override
+            public void onFinish(String str) {
+                List<HotSongList> list = ParseUtil.parseHotSongList(str);
+                mListener.onHotSongListDataFinish(list);
+            }
+        });
+    }
+
+    public void getRefreshAlbumListData(){
+        String address = MusicApi.Album.recommendAlbum(0,6);
+        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+            @Override
+            public void onFinish(String str) {
+                List<AlbumList> list = ParseUtil.parseAlbumList(str);
+                mListener.onAlbumListDataFinish(list);
+            }
+        });
+    }
+
     public interface RecListener {
         void onBannerDataFinish(List<FocusPic> list);
         void onHotSongListDataFinish(List<HotSongList> list);
         void onAlbumListDataFinish(List<AlbumList> list);
+        void onRefreshBannerDataFinish(List<FocusPic> list);
     }
 }

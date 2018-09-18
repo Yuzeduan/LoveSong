@@ -15,11 +15,15 @@ public class MVPContract {
         void showBanner(List<FocusPic> list);
         void showHotSongList(List<HotSongList> list);
         void showAlbumList(List<AlbumList> list);
+        void showRefreshData(List<FocusPic> list);
     }
 
     public interface IPresenter {
         void getBannerData();
         void getHotSongListData();
         void getAlbumListData();
+        void getRefreshBannerData();
+        void getRefreshHotSongListData();
+        void getRefreshAlbumListData();
     }
 }

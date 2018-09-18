@@ -59,7 +59,7 @@ public class ItemTypeFactory implements TypeFactory{
     public BaseViewHolder createViewHolder(int type, View itemView, Context context) {
         switch (type){
             case BANNER_TYPE_LAYOUT:
-                return new BannerHolder(itemView);
+                return new BannerHolder(itemView, context);
             case PATTERN_NAME_TYPE_LAYOUT:
                 return new PatternNameHolder(itemView);
             case HOTSONGLIST_LAYOUT:

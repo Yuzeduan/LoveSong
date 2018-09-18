@@ -1,6 +1,7 @@
 package com.yuzeduan.lovesong.recommend.adapter.viewholder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,7 +11,9 @@ import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 import com.yuzeduan.lovesong.R;
+import com.yuzeduan.lovesong.main.view.MainActivity;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
+import com.yuzeduan.lovesong.recommend.view.BannerDetailActivity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,9 +22,11 @@ import java.util.List;
 public class BannerHolder extends BaseViewHolder<List<FocusPic>> implements OnBannerListener{
     private Banner mBanner;
     private List<FocusPic> mList;
+    private Context mContext;
 
-    public BannerHolder(View itemView) {
+    public BannerHolder(View itemView, Context mContext) {
         super(itemView);
+        this.mContext = mContext;
     }
 
     /**
@@ -53,6 +58,7 @@ public class BannerHolder extends BaseViewHolder<List<FocusPic>> implements OnBa
 
     @Override
     public void OnBannerClick(int position) {
-        Log.d("BannerViewHolder", "OnBannerClick: "+ mList.get(position).getmCode());
+        Intent intent = new Intent(mContext, BannerDetailActivity.class);
+        mContext.startActivity(intent);
     }
 }

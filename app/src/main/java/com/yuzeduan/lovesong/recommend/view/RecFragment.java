@@ -3,6 +3,7 @@ package com.yuzeduan.lovesong.recommend.view;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
     private RecyclerView mRecyclerView;
     private MultiAdapter mMultiAdapter;
     private FragmentHandler mFragmentHandler;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private int time;
 
     @Override
@@ -39,6 +41,9 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.fragment_recommend, container, false);
         mRecyclerView = mView.findViewById(R.id.rec_rcv);
+        mSwipeRefreshLayout = mView.findViewById(R.id.swipe_refresh);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.title_bar);
+        mSwipeRefreshLayout.setRefreshing(true);
         return mView;
     }
 
@@ -48,6 +53,25 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
             mPresenter.getBannerData();
             time++;
         }
+    }
+
+    @Override
+    public void showRefreshData(List<FocusPic> list) {
+        mMultiAdapter.setmPicList(list);
+        Message message = Message.obtain();
+        message.what = FINISH_BANNERDATA;
+        mFragmentHandler.sendMessage(message);
+    }
+
+    @Override
+    protected void refreshView() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPresenter.getRefreshBannerData();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -76,6 +100,7 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
     @Override
     public void showAlbumList(List<AlbumList> list) {
         mMultiAdapter.setmAlbumList(list);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private static class FragmentHandler extends Handler{

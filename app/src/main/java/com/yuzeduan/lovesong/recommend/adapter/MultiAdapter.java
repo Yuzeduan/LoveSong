@@ -1,5 +1,6 @@
 package com.yuzeduan.lovesong.recommend.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -118,6 +119,11 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public void setmAlbumList(List<AlbumList> mAlbumList) {
         this.mAlbumList = mAlbumList;
+        notifyDataSetChanged();
+    }
+
+    public void setmPicList(List<FocusPic> mPicList) {
+        this.mPicList = mPicList;
         notifyDataSetChanged();
     }
 }

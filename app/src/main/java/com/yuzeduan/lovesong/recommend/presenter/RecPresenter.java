@@ -17,6 +17,7 @@ public class RecPresenter extends BasePresenter<MVPContract.IView> implements MV
     private static final int GET_BANNER_DATA = 1;
     private static final int GET_HOTSONGLIST_DATA = 2;
     private static final int GET_ALBUMLIST_DATA = 3;
+    private static final int GET_REFRESH_BANNER_DATA = 4;
 
     private RecModel mRecModel;
     private UIHandler mUIHandler;
@@ -47,6 +48,14 @@ public class RecPresenter extends BasePresenter<MVPContract.IView> implements MV
                 message.obj = list;
                 mUIHandler.sendMessage(message);
             }
+
+            @Override
+            public void onRefreshBannerDataFinish(List<FocusPic> list) {
+                Message message = Message.obtain();
+                message.what = GET_REFRESH_BANNER_DATA;
+                message.obj = list;
+                mUIHandler.sendMessage(message);
+            }
         };
         mRecModel = new RecModel(listener);
         mUIHandler = new UIHandler(this);
@@ -65,6 +74,21 @@ public class RecPresenter extends BasePresenter<MVPContract.IView> implements MV
     @Override
     public void getAlbumListData() {
         mRecModel.getAlbumListData();
+    }
+
+    @Override
+    public void getRefreshBannerData() {
+        mRecModel.getRefreshBannerData();
+    }
+
+    @Override
+    public void getRefreshHotSongListData() {
+        mRecModel.getRefreshHotSongListData();
+    }
+
+    @Override
+    public void getRefreshAlbumListData() {
+        mRecModel.getRefreshAlbumListData();
     }
 
     private static class UIHandler extends Handler {
@@ -86,6 +110,9 @@ public class RecPresenter extends BasePresenter<MVPContract.IView> implements MV
                     break;
                 case GET_ALBUMLIST_DATA:
                     presenter.getView().showAlbumList((List<AlbumList>)msg.obj);
+                    break;
+                case GET_REFRESH_BANNER_DATA:
+                    presenter.getView().showRefreshData((List<FocusPic>)msg.obj);
             }
         }
     }
