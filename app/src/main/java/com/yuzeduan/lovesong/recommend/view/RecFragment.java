@@ -17,14 +17,21 @@ import com.yuzeduan.lovesong.recommend.adapter.MultiAdapter;
 import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.bean.HotSongList;
+import com.yuzeduan.lovesong.recommend.bean.RadioList;
 import com.yuzeduan.lovesong.recommend.presenter.RecPresenter;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import static com.yuzeduan.lovesong.recommend.presenter.RecPresenter.REFRESH;
+
 public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> implements MVPContract.IView{
     private static final int FINISH_BANNERDATA = 1;
     private static final int FINISH_HOTSONGLISTDATA = 2;
+    private static final int FINISH_ALBUMLISTDATA = 3;
+    private static final int FINISH_REFRESH_BANNERDATA = 4;
+    private static final int FINISH_REFRESH_HOTSONGLIST_DATA = 5;
+    private static final int FINISH_REFRESH_ALBUMLIST_DATA = 6;
 
     private RecyclerView mRecyclerView;
     private MultiAdapter mMultiAdapter;
@@ -59,7 +66,7 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
     public void showRefreshData(List<FocusPic> list) {
         mMultiAdapter.setmPicList(list);
         Message message = Message.obtain();
-        message.what = FINISH_BANNERDATA;
+        message.what = FINISH_REFRESH_BANNERDATA;
         mFragmentHandler.sendMessage(message);
     }
 
@@ -90,16 +97,32 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
     }
 
     @Override
-    public void showHotSongList(List<HotSongList> list) {
+    public void showHotSongList(List<HotSongList> list, int flag) {
         mMultiAdapter.setmHotSongList(list);
         Message message = Message.obtain();
-        message.what = FINISH_HOTSONGLISTDATA;
+        if(flag == REFRESH){
+            message.what = FINISH_REFRESH_HOTSONGLIST_DATA;
+        }else{
+            message.what = FINISH_HOTSONGLISTDATA;
+        }
         mFragmentHandler.sendMessage(message);
     }
 
     @Override
-    public void showAlbumList(List<AlbumList> list) {
+    public void showAlbumList(List<AlbumList> list, int flag) {
         mMultiAdapter.setmAlbumList(list);
+        Message message = Message.obtain();
+        if(flag == REFRESH){
+            message.what = FINISH_REFRESH_ALBUMLIST_DATA;
+        }else{
+            message.what = FINISH_ALBUMLISTDATA;
+        }
+        mFragmentHandler.sendMessage(message);
+    }
+
+    @Override
+    public void showRadioList(List<RadioList> list, int flag) {
+        mMultiAdapter.setmRadioList(list);
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -118,6 +141,19 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
                     break;
                 case FINISH_HOTSONGLISTDATA:
                     recFragmentWeakReference.get().mPresenter.getAlbumListData();
+                    break;
+                case FINISH_ALBUMLISTDATA:
+                    recFragmentWeakReference.get().mPresenter.getRadioListData();
+                    break;
+                case FINISH_REFRESH_BANNERDATA:
+                    recFragmentWeakReference.get().mPresenter.getRefreshHotSongListData();
+                    break;
+                case FINISH_REFRESH_HOTSONGLIST_DATA:
+                    recFragmentWeakReference.get().mPresenter.getRefreshAlbumListData();
+                    break;
+                case FINISH_REFRESH_ALBUMLIST_DATA:
+                    recFragmentWeakReference.get().mPresenter.getRefreshRadioListData();
+                    break;
             }
         }
     }

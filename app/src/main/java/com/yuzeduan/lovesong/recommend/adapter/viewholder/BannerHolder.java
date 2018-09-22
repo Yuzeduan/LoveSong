@@ -1,8 +1,6 @@
 package com.yuzeduan.lovesong.recommend.adapter.viewholder;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,7 +9,6 @@ import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 import com.yuzeduan.lovesong.R;
-import com.yuzeduan.lovesong.main.view.MainActivity;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.view.BannerDetailActivity;
 
@@ -58,7 +55,9 @@ public class BannerHolder extends BaseViewHolder<List<FocusPic>> implements OnBa
 
     @Override
     public void OnBannerClick(int position) {
-        Intent intent = new Intent(mContext, BannerDetailActivity.class);
-        mContext.startActivity(intent);
+        String path = mList.get(position).getmCode();
+        if(path.startsWith("http")){
+            BannerDetailActivity.actionStart(mContext, path);
+        }
     }
 }

@@ -1,14 +1,23 @@
 package com.yuzeduan.lovesong.recommend.model;
 
+import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.bean.HotSongList;
+import com.yuzeduan.lovesong.recommend.bean.RadioList;
 import com.yuzeduan.lovesong.util.HttpUtil;
-import com.yuzeduan.lovesong.util.ParseUtil;
+import com.yuzeduan.lovesong.util.ParseJsonUtil;
 
+import java.io.IOException;
 import java.util.List;
 
 import api.MusicApi;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class RecModel {
     private RecListener mListener;
@@ -19,10 +28,16 @@ public class RecModel {
 
     public void getBannerData(){
         String address = MusicApi.focusPic(0);
-        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+        HttpUtil.sendHttpRequest(address, new Callback() {
             @Override
-            public void onFinish(String str) {
-                List<FocusPic> list = ParseUtil.parseFocusPic(str);
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                str = ParseJsonUtil.obtainDesignationJson(str, "pic");
+                List<FocusPic> list = new Gson().fromJson(str, new TypeToken<List<FocusPic>>(){}.getType());
                 mListener.onBannerDataFinish(list);
             }
         });
@@ -30,10 +45,16 @@ public class RecModel {
 
     public void getHotSongListData(){
         String address = MusicApi.GeDan.hotGeDan(0);
-        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+        HttpUtil.sendHttpRequest(address, new Callback() {
             @Override
-            public void onFinish(String str) {
-                List<HotSongList> list = ParseUtil.parseHotSongList(str);
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                str = ParseJsonUtil.obtainDesignationJson(str, "content.list");
+                List<HotSongList> list = new Gson().fromJson(str, new TypeToken<List<HotSongList>>(){}.getType());
                 mListener.onHotSongListDataFinish(list);
             }
         });
@@ -41,21 +62,50 @@ public class RecModel {
 
     public void getAlbumListData(){
         String address = MusicApi.Album.recommendAlbum(0,6);
-        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+        HttpUtil.sendHttpRequest(address, new Callback() {
             @Override
-            public void onFinish(String str) {
-                List<AlbumList> list = ParseUtil.parseAlbumList(str);
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                str = ParseJsonUtil.obtainDesignationJson(str, "plaze_album_list.RM.album_list.list");
+                List<AlbumList> list = new Gson().fromJson(str, new TypeToken<List<AlbumList>>(){}.getType());
                 mListener.onAlbumListDataFinish(list);
+            }
+        });
+    }
+
+    public void getRadioListData(){
+        String address = MusicApi.Radio.recommendRadioList(0);
+        HttpUtil.sendHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull  Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                str = ParseJsonUtil.obtainDesignationJson(str, "list");
+                List<RadioList> list = new Gson().fromJson(str, new TypeToken<List<RadioList>>(){}.getType());
+                mListener.onRadioListDataFinish(list);
             }
         });
     }
 
     public void getRefreshBannerData(){
         String address = MusicApi.focusPic(0);
-        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+        HttpUtil.sendHttpRequest(address, new Callback() {
             @Override
-            public void onFinish(String str) {
-                List<FocusPic> list = ParseUtil.parseFocusPic(str);
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                str = ParseJsonUtil.obtainDesignationJson(str, "pic");
+                List<FocusPic> list = new Gson().fromJson(str, new TypeToken<List<FocusPic>>(){}.getType());
                 mListener.onRefreshBannerDataFinish(list);
             }
         });
@@ -63,30 +113,70 @@ public class RecModel {
 
     public void getRefreshHotSongListData(){
         String address = MusicApi.GeDan.hotGeDan(0);
-        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+        HttpUtil.sendHttpRequest(address, new Callback() {
             @Override
-            public void onFinish(String str) {
-                List<HotSongList> list = ParseUtil.parseHotSongList(str);
-                mListener.onHotSongListDataFinish(list);
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                str = ParseJsonUtil.obtainDesignationJson(str, "content.list");
+                List<HotSongList> list = new Gson().fromJson(str, new TypeToken<List<HotSongList>>(){}.getType());
+                mListener.onRefreshHotSongListData(list);
             }
         });
     }
 
     public void getRefreshAlbumListData(){
         String address = MusicApi.Album.recommendAlbum(0,6);
-        HttpUtil.okHttpAsync(address, new HttpUtil.HttpCallback() {
+        HttpUtil.sendHttpRequest(address, new Callback() {
             @Override
-            public void onFinish(String str) {
-                List<AlbumList> list = ParseUtil.parseAlbumList(str);
-                mListener.onAlbumListDataFinish(list);
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                str = ParseJsonUtil.obtainDesignationJson(str, "plaze_album_list.RM.album_list.list");
+                List<AlbumList> list = new Gson().fromJson(str, new TypeToken<List<AlbumList>>(){}.getType());
+                mListener.onRefreshAlbumListDataFinish(list);
+            }
+        });
+    }
+
+    public void getRefreshRadioListData(){
+        String address = MusicApi.Radio.recommendRadioList(0);
+        HttpUtil.sendHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull  Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                str = ParseJsonUtil.obtainDesignationJson(str, "list");
+                List<RadioList> list = new Gson().fromJson(str, new TypeToken<List<RadioList>>(){}.getType());
+                mListener.onRefreshRadioListDataFinish(list);
             }
         });
     }
 
     public interface RecListener {
         void onBannerDataFinish(List<FocusPic> list);
+
         void onHotSongListDataFinish(List<HotSongList> list);
+
         void onAlbumListDataFinish(List<AlbumList> list);
+
+        void onRadioListDataFinish(List<RadioList> list);
+
         void onRefreshBannerDataFinish(List<FocusPic> list);
+
+        void onRefreshHotSongListData(List<HotSongList> list);
+
+        void onRefreshAlbumListDataFinish(List<AlbumList> list);
+
+        void onRefreshRadioListDataFinish(List<RadioList> list);
     }
 }

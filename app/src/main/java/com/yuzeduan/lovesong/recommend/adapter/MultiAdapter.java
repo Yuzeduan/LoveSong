@@ -1,6 +1,5 @@
 package com.yuzeduan.lovesong.recommend.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,9 +15,11 @@ import com.yuzeduan.lovesong.recommend.adapter.viewholder.BannerHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.BaseViewHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.HotSongListHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.PatternNameHolder;
+import com.yuzeduan.lovesong.recommend.adapter.viewholder.RadioListHolder;
 import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.bean.HotSongList;
+import com.yuzeduan.lovesong.recommend.bean.RadioList;
 
 import java.util.List;
 
@@ -26,12 +27,14 @@ import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.AL
 import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.BANNER_TYPE_LAYOUT;
 import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.HOTSONGLIST_LAYOUT;
 import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.PATTERN_NAME_TYPE_LAYOUT;
+import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.RADIOLIST_LAYOUT;
 
 public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private TypeFactory mFactory;
     private List<FocusPic> mPicList;
     private List<HotSongList> mHotSongList;
     private List<AlbumList> mAlbumList;
+    private List<RadioList> mRadioList;
 
     public MultiAdapter(List<FocusPic> mPicList) {
         this.mPicList = mPicList;
@@ -51,6 +54,7 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 break;
             case HOTSONGLIST_LAYOUT:
             case ALBUMLIST_LAYOUT:
+            case RADIOLIST_LAYOUT:
                 type = R.layout.item_pattern_rec;
                 break;
         }
@@ -74,12 +78,17 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 AlbumList data = mAlbumList.get(position - 9);
                 ((AlbumListHolder) holder).bindViewData(data);
             }
+        }else if(holder instanceof RadioListHolder){
+            if(mRadioList != null && !mRadioList.isEmpty()){
+                RadioList data = mRadioList.get(position - 16);
+                ((RadioListHolder) holder).bindViewData(data);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return 15;
+        return 22;
     }
 
 
@@ -124,6 +133,11 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public void setmPicList(List<FocusPic> mPicList) {
         this.mPicList = mPicList;
+        notifyDataSetChanged();
+    }
+
+    public void setmRadioList(List<RadioList> mRadioList) {
+        this.mRadioList = mRadioList;
         notifyDataSetChanged();
     }
 }

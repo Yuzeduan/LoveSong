@@ -9,12 +9,15 @@ import com.yuzeduan.lovesong.recommend.adapter.viewholder.BannerHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.BaseViewHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.HotSongListHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.PatternNameHolder;
+import com.yuzeduan.lovesong.recommend.adapter.viewholder.RadioListHolder;
+import com.yuzeduan.lovesong.recommend.bean.RadioList;
 
 public class ItemTypeFactory implements TypeFactory{
     public static final int BANNER_TYPE_LAYOUT = 10001;
     public static final int PATTERN_NAME_TYPE_LAYOUT = 10002;
     public static final int HOTSONGLIST_LAYOUT = 10003;
     public static final int ALBUMLIST_LAYOUT = 10004;
+    public static final int RADIOLIST_LAYOUT = 10005;
 
     /**
      * 根据在RecycleView中的位置返回Type的值
@@ -29,6 +32,7 @@ public class ItemTypeFactory implements TypeFactory{
                 return BANNER_TYPE_LAYOUT;
             case 1:
             case 8:
+            case 15:
                 return PATTERN_NAME_TYPE_LAYOUT;
             case 2:
             case 3:
@@ -44,6 +48,13 @@ public class ItemTypeFactory implements TypeFactory{
             case 13:
             case 14:
                 return ALBUMLIST_LAYOUT;
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+            case 20:
+            case 21:
+                return RADIOLIST_LAYOUT;
             default:
                 return 0;
         }
@@ -66,6 +77,8 @@ public class ItemTypeFactory implements TypeFactory{
                 return new HotSongListHolder(itemView, context);
             case ALBUMLIST_LAYOUT:
                 return new AlbumListHolder(itemView, context);
+            case RADIOLIST_LAYOUT:
+                return new RadioListHolder(itemView, context);
             default:
                 return null;
         }

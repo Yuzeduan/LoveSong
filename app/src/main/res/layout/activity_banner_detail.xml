@@ -8,6 +8,12 @@
     tools:context=".recommend.view.BannerDetailActivity">
 
     <include
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar" />
+
+    <WebView
+        android:id="@+id/banner_detail_wv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 </RelativeLayout>

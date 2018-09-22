@@ -4,4 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/local_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/center_tv"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textColor="@color/title_bar"
+        android:textSize="30sp"
+        android:visibility="gone"/>
+
+    <com.yuzeduan.lovesong.widget.IndexBar
+        android:id="@+id/local_idr"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="4dp">
+    </com.yuzeduan.lovesong.widget.IndexBar>
+
 </RelativeLayout>

@@ -27,7 +27,7 @@ public class PatternNameHolder extends BaseViewHolder<Integer>{
                 mTextView.setText("最新专辑");
                 break;
             case 15:
-                mTextView.setText("电台活动");
+                mTextView.setText("主播电台");
                 break;
         }
     }
