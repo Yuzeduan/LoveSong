@@ -4,4 +4,5 @@
     <string name="yinyue">音乐</string>
     <string name="lovesong">LoveSong</string>
     <string name="queryhint">歌手, 音乐, 专辑</string>
+    <string name="search">热门搜索</string>
 </resources>

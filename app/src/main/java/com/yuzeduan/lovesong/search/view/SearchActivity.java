@@ -1,6 +1,9 @@
 package com.yuzeduan.lovesong.search.view;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.ImageButton;
@@ -14,7 +17,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     protected void initVariables() {
-
     }
 
     @Override
@@ -23,6 +25,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         mImageButton = findViewById(R.id.back_ibn);
         mSearchView = findViewById(R.id.search_sv);
         mSearchView.setOnQueryTextListener(this);
+        replaceFragment(new HotWordFragment());
         initClick();
     }
 
@@ -37,7 +40,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     protected void loadData() {
-
     }
 
     @Override
@@ -48,5 +50,16 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     @Override
     public boolean onQueryTextChange(String s) {
         return false;
+    }
+
+    /**
+     * 用来将FrameLayout换成Fragment
+     * @param fragment
+     */
+    private void replaceFragment(Fragment fragment){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.below_flt, fragment);
+        transaction.commit();
     }
 }

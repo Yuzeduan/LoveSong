@@ -34,6 +34,7 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/below_flt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/search_layout"
