@@ -5,12 +5,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.yuzeduan.lovesong.R;
 import com.yuzeduan.lovesong.base.BaseActivity;
+import com.yuzeduan.lovesong.search.event.SearchMessageEvent;
+import com.yuzeduan.lovesong.util.DensityUtil;
 
+import de.greenrobot.event.EventBus;
+
+/**
+ * 搜索的主界面
+ */
 public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener{
     private ImageButton mImageButton;
     private SearchView mSearchView;
@@ -27,6 +36,13 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         mSearchView.setOnQueryTextListener(this);
         replaceFragment(new HotWordFragment());
         initClick();
+        setSearchView();
+    }
+
+    private void setSearchView() {
+        final EditText editText = mSearchView.findViewById(R.id.search_src_text);
+        editText.setTextSize(DensityUtil.dpToPx(5));
+        editText.setTextColor(getResources().getColor(R.color.lightgrey));
     }
 
     private void initClick() {
@@ -44,11 +60,18 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public boolean onQueryTextSubmit(String s) {
+        replaceFragment(new SearchMainFragment());
+        EventBus.getDefault().postSticky(new SearchMessageEvent(s));
+        Log.d("SearchActivity", "onQueryTextSubmit: "+s);
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
+        Log.d("SearchActivity", "onQueryTextChange: ");
+        if(s.equals("")) {
+            replaceFragment(new HotWordFragment());
+        }
         return false;
     }
 

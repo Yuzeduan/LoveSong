@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/pic_iv"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/album_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/pic_iv"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="18dp"
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/artist_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/album_tv"
+        android:layout_below="@id/album_tv"
+        android:textColor="@color/lightgrey"
+        android:layout_marginTop="1dp"
+        android:textSize="12sp"/>
+
+    <ImageButton
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_right"
+        android:layout_marginEnd="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="@color/gainsboro"
+        android:layout_below="@id/pic_iv"/>
+</RelativeLayout>

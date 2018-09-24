@@ -1,7 +1,6 @@
 package com.yuzeduan.lovesong.search.view;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +10,12 @@ import com.yuzeduan.lovesong.base.BaseFragment;
 import com.yuzeduan.lovesong.recommend.view.BannerDetailActivity;
 import com.yuzeduan.lovesong.search.MVPContract;
 import com.yuzeduan.lovesong.search.bean.HotWord;
-import com.yuzeduan.lovesong.search.presenter.SearchPresenter;
+import com.yuzeduan.lovesong.search.presenter.SearchHotWordPresenter;
 import com.yuzeduan.lovesong.widget.SearchTipsGroupView;
 
 import java.util.List;
 
-public class HotWordFragment extends BaseFragment<MVPContract.IView, SearchPresenter> implements MVPContract.IView, SearchTipsGroupView.OnItemClick{
+public class HotWordFragment extends BaseFragment<MVPContract.IView, SearchHotWordPresenter> implements MVPContract.IView, SearchTipsGroupView.OnItemClick{
     private SearchTipsGroupView mSearchTipsGroupView;
     private List<HotWord> mList;
 
@@ -41,8 +40,8 @@ public class HotWordFragment extends BaseFragment<MVPContract.IView, SearchPrese
     }
 
     @Override
-    protected SearchPresenter createPresenter() {
-        return new SearchPresenter();
+    protected SearchHotWordPresenter createPresenter() {
+        return new SearchHotWordPresenter();
     }
 
     @Override

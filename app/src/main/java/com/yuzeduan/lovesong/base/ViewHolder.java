@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,6 +57,12 @@ public class ViewHolder extends RecyclerView.ViewHolder{
     public ViewHolder setText(int viewId, String text){
         TextView view = getView(viewId);
         view.setText(text);
+        return this;
+    }
+
+    public ViewHolder setHtmlText(int viewId, String text){
+        WebView view = getView(viewId);
+        view.loadDataWithBaseURL(null,text,"text/html","utf-8",null);
         return this;
     }
 

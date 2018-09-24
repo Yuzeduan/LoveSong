@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ public abstract class LazyFragment extends Fragment{
     private View mView;
     protected boolean isVisible; //用于判断是否可见
     protected boolean isPrepared;
-    protected boolean isFirst = false;
+    protected boolean isFirst = true;
 
     @Nullable
     @Override
@@ -31,7 +30,6 @@ public abstract class LazyFragment extends Fragment{
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.d("setUserVisible", "setUserVisibleHint: 调用了");
         if(getUserVisibleHint()) {
             isVisible = true;
             onVisible();

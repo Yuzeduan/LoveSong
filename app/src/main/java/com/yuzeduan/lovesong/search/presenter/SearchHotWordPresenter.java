@@ -6,19 +6,19 @@ import android.os.Message;
 import com.yuzeduan.lovesong.base.BasePresenter;
 import com.yuzeduan.lovesong.search.MVPContract;
 import com.yuzeduan.lovesong.search.bean.HotWord;
-import com.yuzeduan.lovesong.search.model.SearchModel;
+import com.yuzeduan.lovesong.search.model.SearchHotWordModel;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 
-public class SearchPresenter extends BasePresenter<MVPContract.IView> implements MVPContract.IPresenter{
+public class SearchHotWordPresenter extends BasePresenter<MVPContract.IView> implements MVPContract.IPresenter{
     private static final int GET_HOTWORD_DATA = 1;
-    private SearchModel mSearchModel;
+    private SearchHotWordModel mSearchHotWordModel;
     private UIHandler mUIHandler;
 
-    public SearchPresenter() {
-        SearchModel.SearchListener listener = new SearchModel.SearchListener() {
+    public SearchHotWordPresenter() {
+        SearchHotWordModel.SearchListener listener = new SearchHotWordModel.SearchListener() {
             @Override
             public void onHotWordListener(List<HotWord> list) {
                 Message message = Message.obtain();
@@ -28,24 +28,24 @@ public class SearchPresenter extends BasePresenter<MVPContract.IView> implements
             }
         };
         mUIHandler = new UIHandler(this);
-        mSearchModel = new SearchModel(listener);
+        mSearchHotWordModel = new SearchHotWordModel(listener);
     }
 
     @Override
     public void getHotWordData() {
-        mSearchModel.getHotWordData();
+        mSearchHotWordModel.getHotWordData();
     }
 
     private static class UIHandler extends Handler {
-        private WeakReference<SearchPresenter> reference;
+        private WeakReference<SearchHotWordPresenter> reference;
 
-        public UIHandler(SearchPresenter searchPresenter) {
-            reference = new WeakReference<>(searchPresenter);
+        public UIHandler(SearchHotWordPresenter searchHotWordPresenter) {
+            reference = new WeakReference<>(searchHotWordPresenter);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            SearchPresenter presenter = reference.get();
+            SearchHotWordPresenter presenter = reference.get();
             switch (msg.what){
                 case GET_HOTWORD_DATA:
                     presenter.getView().showHotWord((List<HotWord>)msg.obj);
