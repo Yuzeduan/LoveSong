@@ -14,6 +14,7 @@ import com.yuzeduan.lovesong.recommend.adapter.viewholder.AlbumListHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.BannerHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.BaseViewHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.HotSongListHolder;
+import com.yuzeduan.lovesong.recommend.adapter.viewholder.IconHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.PatternNameHolder;
 import com.yuzeduan.lovesong.recommend.adapter.viewholder.RadioListHolder;
 import com.yuzeduan.lovesong.recommend.bean.AlbumList;
@@ -26,6 +27,7 @@ import java.util.List;
 import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.ALBUMLIST_LAYOUT;
 import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.BANNER_TYPE_LAYOUT;
 import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.HOTSONGLIST_LAYOUT;
+import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.ICON_LAYOUT;
 import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.PATTERN_NAME_TYPE_LAYOUT;
 import static com.yuzeduan.lovesong.recommend.adapter.factory.ItemTypeFactory.RADIOLIST_LAYOUT;
 
@@ -52,6 +54,9 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             case PATTERN_NAME_TYPE_LAYOUT:
                 type = R.layout.item_pattern_name_rec;
                 break;
+            case ICON_LAYOUT:
+                type = R.layout.item_icon;
+                break;
             case HOTSONGLIST_LAYOUT:
             case ALBUMLIST_LAYOUT:
             case RADIOLIST_LAYOUT:
@@ -68,19 +73,21 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             ((BannerHolder) holder).bindViewData(mPicList);
         }else if(holder instanceof PatternNameHolder){
             ((PatternNameHolder) holder).bindViewData(position);
+        }else if(holder instanceof IconHolder){
+            ((IconHolder) holder).bindViewData(position);
         }else if(holder instanceof HotSongListHolder){
             if(mHotSongList != null && !mHotSongList.isEmpty()){
-                HotSongList data = mHotSongList.get(position - 2);
+                HotSongList data = mHotSongList.get(position - 8);
                 ((HotSongListHolder) holder).bindViewData(data);
             }
         }else if(holder instanceof AlbumListHolder){
             if(mAlbumList != null && !mAlbumList.isEmpty()){
-                AlbumList data = mAlbumList.get(position - 9);
+                AlbumList data = mAlbumList.get(position - 15);
                 ((AlbumListHolder) holder).bindViewData(data);
             }
         }else if(holder instanceof RadioListHolder){
             if(mRadioList != null && !mRadioList.isEmpty()){
-                RadioList data = mRadioList.get(position - 16);
+                RadioList data = mRadioList.get(position - 22);
                 ((RadioListHolder) holder).bindViewData(data);
             }
         }
@@ -88,7 +95,7 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 22;
+        return 28;
     }
 
 
@@ -112,6 +119,8 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         case PATTERN_NAME_TYPE_LAYOUT:
                             //占满一列
                             return gridLayoutManager.getSpanCount();
+                        case ICON_LAYOUT:
+                            return gridLayoutManager.getSpanCount() / 6;
                         default:
                             //占一列的1/3
                             return gridLayoutManager.getSpanCount() / 3;

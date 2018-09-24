@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.yuzeduan.lovesong.search.view.AlbumListFragment;
 import com.yuzeduan.lovesong.search.view.ArtistListFragment;
+import com.yuzeduan.lovesong.search.view.SearchNullFragment;
 import com.yuzeduan.lovesong.search.view.SongListFragment;
 
 public class SearchFragAdapter extends FragmentPagerAdapter {
@@ -27,13 +28,13 @@ public class SearchFragAdapter extends FragmentPagerAdapter {
             case 2:
                 return new AlbumListFragment();
             default:
-                return null;
+                return new SearchNullFragment();
         }
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 7;
     }
 
     @Nullable
@@ -46,6 +47,14 @@ public class SearchFragAdapter extends FragmentPagerAdapter {
                 return "歌手";
             case 2:
                 return "专辑";
+            case 3:
+                return "视频";
+            case 4:
+                return "歌单";
+            case 5:
+                return "用户";
+            case 6:
+                return "话题";
             default:
                 return null;
         }

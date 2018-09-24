@@ -20,13 +20,13 @@ public class PatternNameHolder extends BaseViewHolder<Integer>{
     public void bindViewData(Integer data) {
         TextView mTextView = getView(R.id.rec_ptn_name_tv);
         switch (data){
-            case 1:
+            case 7:
                 mTextView.setText("最热音乐");
                 break;
-            case 8:
+            case 14:
                 mTextView.setText("最新专辑");
                 break;
-            case 15:
+            case 21:
                 mTextView.setText("主播电台");
                 break;
         }

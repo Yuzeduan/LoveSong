@@ -85,7 +85,7 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
         }else {
             mAdapter.setDataChange(list);
         }
-        //initAdapterEvent();
+        initAdapterEvent();
     }
 
     private void initAdapterEvent() {
