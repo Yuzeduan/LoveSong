@@ -19,7 +19,6 @@ public class AlbumListHolder extends BaseViewHolder<AlbumList>{
 
     /**
      * 绑定itemView 的数据
-     *
      * @param data
      */
     @Override

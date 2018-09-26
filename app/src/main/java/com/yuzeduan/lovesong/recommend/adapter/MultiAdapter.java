@@ -37,6 +37,7 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<HotSongList> mHotSongList;
     private List<AlbumList> mAlbumList;
     private List<RadioList> mRadioList;
+    private OnItemClickListener mListener;
 
     public MultiAdapter(List<FocusPic> mPicList) {
         this.mPicList = mPicList;
@@ -68,7 +69,7 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final BaseViewHolder holder, final int position) {
         if(holder instanceof BannerHolder){
             ((BannerHolder) holder).bindViewData(mPicList);
         }else if(holder instanceof PatternNameHolder){
@@ -77,18 +78,42 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             ((IconHolder) holder).bindViewData(position);
         }else if(holder instanceof HotSongListHolder){
             if(mHotSongList != null && !mHotSongList.isEmpty()){
-                HotSongList data = mHotSongList.get(position - 8);
+                final HotSongList data = mHotSongList.get(position - 8);
                 ((HotSongListHolder) holder).bindViewData(data);
+                ((HotSongListHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(mListener != null){
+                            mListener.onHotSongClick(data);
+                        }
+                    }
+                });
             }
         }else if(holder instanceof AlbumListHolder){
             if(mAlbumList != null && !mAlbumList.isEmpty()){
-                AlbumList data = mAlbumList.get(position - 15);
+                final AlbumList data = mAlbumList.get(position - 15);
                 ((AlbumListHolder) holder).bindViewData(data);
+                ((AlbumListHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(mListener != null){
+                            mListener.onAlbumClick(data);
+                        }
+                    }
+                });
             }
         }else if(holder instanceof RadioListHolder){
             if(mRadioList != null && !mRadioList.isEmpty()){
-                RadioList data = mRadioList.get(position - 22);
+                final RadioList data = mRadioList.get(position - 22);
                 ((RadioListHolder) holder).bindViewData(data);
+                ((RadioListHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(mListener != null){
+                            mListener.onRadioClick(data);
+                        }
+                    }
+                });
             }
         }
     }
@@ -148,5 +173,15 @@ public class MultiAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void setmRadioList(List<RadioList> mRadioList) {
         this.mRadioList = mRadioList;
         notifyDataSetChanged();
+    }
+
+    public void setmListener(OnItemClickListener mListener) {
+        this.mListener = mListener;
+    }
+
+    public interface OnItemClickListener{
+        void onAlbumClick(AlbumList data);
+        void onHotSongClick(HotSongList data);
+        void onRadioClick(RadioList data);
     }
 }

@@ -1,5 +1,6 @@
 package com.yuzeduan.lovesong.recommend.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.yuzeduan.lovesong.R;
 import com.yuzeduan.lovesong.base.BaseFragment;
@@ -18,10 +20,16 @@ import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.bean.HotSongList;
 import com.yuzeduan.lovesong.recommend.bean.RadioList;
+import com.yuzeduan.lovesong.recommend.event.AlbumEvent;
+import com.yuzeduan.lovesong.recommend.event.HotSongEvent;
 import com.yuzeduan.lovesong.recommend.presenter.RecPresenter;
+import com.yuzeduan.lovesong.songlist.view.AlbumListActivity;
+import com.yuzeduan.lovesong.songlist.view.SongListActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 import static com.yuzeduan.lovesong.recommend.presenter.RecPresenter.REFRESH;
 
@@ -94,7 +102,35 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
         Message message = Message.obtain();
         message.what = FINISH_BANNERDATA;
         mFragmentHandler.sendMessage(message);
+        initEvent();
     }
+
+    /**
+     * 为RecycleView的子项设置点击事件
+     */
+    private void initEvent() {
+        mMultiAdapter.setmListener(new MultiAdapter.OnItemClickListener() {
+            @Override
+            public void onAlbumClick(AlbumList data) {
+                EventBus.getDefault().postSticky(new AlbumEvent(data));
+                Intent intent = new Intent(getContext(), AlbumListActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onHotSongClick(HotSongList data) {
+                EventBus.getDefault().postSticky(new HotSongEvent(data));
+                Intent intent = new Intent(getContext(), SongListActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onRadioClick(RadioList data) {
+                Toast.makeText(getContext(),data.getmAlbumId(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     @Override
     public void showHotSongList(List<HotSongList> list, int flag) {

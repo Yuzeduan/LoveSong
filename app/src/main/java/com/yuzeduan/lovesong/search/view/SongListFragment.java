@@ -79,7 +79,7 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
     public void showSongView(List<SearchSongList> list) {
         if(mAdapter == null){
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
-            mAdapter = new SongListAdapter(getContext(), list, R.layout.item_search_song);
+            mAdapter = new SongListAdapter(getContext(), list, R.layout.item_song);
             mSongListRv.setLayoutManager(manager);
             mSongListRv.setAdapter(mAdapter);
         }else {

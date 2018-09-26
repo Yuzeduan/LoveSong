@@ -1,16 +1,16 @@
-package com.yuzeduan.lovesong.recommend.bean;
+package com.yuzeduan.lovesong.songlist.bean;
 
 import com.google.gson.annotations.SerializedName;
 
 public class AlbumInfo {
     @SerializedName("author")
     private String mAuthor;
+    @SerializedName("lrclink")
+    private String mLrclink;
+    @SerializedName("song_id")
+    private String mSongId;
     @SerializedName("title")
     private String mTitle;
-    @SerializedName("publishtime")
-    private String mPublishTime;
-    @SerializedName("pic_radio")
-    private String mPicPath;
 
     public String getmAuthor() {
         return mAuthor;
@@ -28,19 +28,19 @@ public class AlbumInfo {
         this.mTitle = mTitle;
     }
 
-    public String getmPublishTime() {
-        return mPublishTime;
+    public String getmLrclink() {
+        return mLrclink;
     }
 
-    public void setmPublishTime(String mPublishTime) {
-        this.mPublishTime = mPublishTime;
+    public void setmLrclink(String mLrclink) {
+        this.mLrclink = mLrclink;
     }
 
-    public String getmPicPath() {
-        return mPicPath;
+    public String getmSongId() {
+        return mSongId;
     }
 
-    public void setmPicPath(String mPicPath) {
-        this.mPicPath = mPicPath;
+    public void setmSongId(String mSongId) {
+        this.mSongId = mSongId;
     }
 }

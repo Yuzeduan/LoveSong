@@ -11,6 +11,8 @@ public class AlbumList {
     private String mAuthor;
     @SerializedName("pic_radio")
     private String mPicPath;
+    @SerializedName("publishtime")
+    private String mPublishTime;
 
     public String getmAlbumId() {
         return mAlbumId;
@@ -42,5 +44,13 @@ public class AlbumList {
 
     public void setmPicPath(String mPicPath) {
         this.mPicPath = mPicPath;
+    }
+
+    public String getmPublishTime() {
+        return mPublishTime;
+    }
+
+    public void setmPublishTime(String mPublishTime) {
+        this.mPublishTime = mPublishTime;
     }
 }

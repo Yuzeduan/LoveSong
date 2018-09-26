@@ -1,4 +1,4 @@
-package com.yuzeduan.lovesong.recommend.bean;
+package com.yuzeduan.lovesong.songlist.bean;
 
 import com.google.gson.annotations.SerializedName;
 
