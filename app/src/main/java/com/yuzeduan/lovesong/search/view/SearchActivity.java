@@ -42,7 +42,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     private void setSearchView() {
         final EditText editText = mSearchView.findViewById(R.id.search_src_text);
         editText.setTextSize(DensityUtil.dpToPx(5));
-        editText.setTextColor(getResources().getColor(R.color.lightgrey));
+        editText.setTextColor(getResources().getColor(R.color.white));
     }
 
     private void initClick() {

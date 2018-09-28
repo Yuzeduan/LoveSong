@@ -126,7 +126,7 @@ public class RecFragment extends BaseFragment<MVPContract.IView, RecPresenter> i
 
             @Override
             public void onRadioClick(RadioList data) {
-                Toast.makeText(getContext(),data.getmAlbumId(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),data.getMAlbumId(), Toast.LENGTH_SHORT).show();
             }
         });
     }

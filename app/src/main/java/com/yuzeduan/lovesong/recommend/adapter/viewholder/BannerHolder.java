@@ -38,7 +38,7 @@ public class BannerHolder extends BaseViewHolder<List<FocusPic>> implements OnBa
         Iterator<FocusPic> iterator = data.iterator();
         mBanner = getView(R.id.rec_bnr);
         while(iterator.hasNext()){
-            mImgList.add(iterator.next().getmRandpic());
+            mImgList.add(iterator.next().getMRandpic());
         }
         mBanner.setImageLoader(new GlideImageLoader()).
                 setImages(mImgList).
@@ -55,7 +55,7 @@ public class BannerHolder extends BaseViewHolder<List<FocusPic>> implements OnBa
 
     @Override
     public void OnBannerClick(int position) {
-        String path = mList.get(position).getmCode();
+        String path = mList.get(position).getMCode();
         if(path.startsWith("http")){
             BannerDetailActivity.actionStart(mContext, path);
         }

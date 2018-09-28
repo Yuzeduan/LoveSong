@@ -97,17 +97,17 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
     @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
     public void getAlbumEvent(AlbumEvent event){
         mAlbumList= event.getmItem();
-        mPresenter.getData(mAlbumList.getmAlbumId());
-        mTitleTv.setText(mAlbumList.getmTitle());
-        mNameTv.setText(mAlbumList.getmTitle());
-        mAuthorTv.setText("歌手:"+mAlbumList.getmAuthor());
-        mTimeTv.setText("发行时间:"+mAlbumList.getmPublishTime());
+        mPresenter.getData(mAlbumList.getMAlbumId());
+        mTitleTv.setText(mAlbumList.getMTitle());
+        mNameTv.setText(mAlbumList.getMTitle());
+        mAuthorTv.setText("歌手:"+mAlbumList.getMAuthor());
+        mTimeTv.setText("发行时间:"+mAlbumList.getMPublishTime());
         Glide.with(this)
-             .load(mAlbumList.getmPicPath())
+             .load(mAlbumList.getMPicPath())
              .bitmapTransform(new BlurTransformation(this, 14, 3))
              .into(mTitleIv);
         Glide.with(this)
-             .load(mAlbumList.getmPicPath())
+             .load(mAlbumList.getMPicPath())
              .into(mLittleIv);
     }
 

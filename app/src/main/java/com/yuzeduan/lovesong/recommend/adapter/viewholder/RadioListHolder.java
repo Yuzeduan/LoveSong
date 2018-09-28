@@ -26,7 +26,7 @@ public class RadioListHolder extends BaseViewHolder<RadioList>{
     public void bindViewData(RadioList data) {
         ImageView mImageView = getView(R.id.rec_imv);
         TextView mTvInfo = getView(R.id.rec_img_info_tv);
-        Glide.with(mContext).load(data.getmPicPath()).into(mImageView);
-        mTvInfo.setText(data.getmTitle());
+        Glide.with(mContext).load(data.getMPicPath()).into(mImageView);
+        mTvInfo.setText(data.getMTitle());
     }
 }

@@ -99,16 +99,16 @@ public class SongListActivity extends MVPActivity<MVPContract.ISongView, SongPre
     @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
     public void getHotSongEvent(HotSongEvent event){
         mHotSongList = event.getmItem();
-        mPresenter.getData(mHotSongList.getmListId());
-        mTitleTv.setText(mHotSongList.getmTitle());
-        mNameTv.setText(mHotSongList.getmTitle());
-        mTagTv.setText(mHotSongList.getmTag());
+        mPresenter.getData(mHotSongList.getMListId());
+        mTitleTv.setText(mHotSongList.getMTitle());
+        mNameTv.setText(mHotSongList.getMTitle());
+        mTagTv.setText(mHotSongList.getMTag());
         Glide.with(this)
-             .load(mHotSongList.getmPicPath())
+             .load(mHotSongList.getMPicPath())
              .bitmapTransform(new BlurTransformation(this, 14, 3))
              .into(mTitleIv);
         Glide.with(this)
-             .load(mHotSongList.getmPicPath())
+             .load(mHotSongList.getMPicPath())
              .into(mLittleIv);
     }
 

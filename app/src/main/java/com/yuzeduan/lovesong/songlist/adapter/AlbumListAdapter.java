@@ -27,7 +27,7 @@ public class AlbumListAdapter extends CommonAdapter<AlbumInfo> {
      */
     @Override
     public void convert(ViewHolder viewHolder, AlbumInfo item, int position) {
-        viewHolder.setText(R.id.title_tv, item.getmTitle())
-                  .setText(R.id.author_tv, item.getmAuthor());
+        viewHolder.setText(R.id.title_tv, item.getMTitle())
+                  .setText(R.id.author_tv, item.getMAuthor());
     }
 }

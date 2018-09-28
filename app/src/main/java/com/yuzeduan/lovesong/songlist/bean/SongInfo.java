@@ -16,6 +16,14 @@ public class SongInfo {
     @SerializedName("album_title")
     private String mAlbumTitle;
 
+    public SongInfo(String mTitle, String mSongId, String mAuthor,
+            String mAlbumTitle) {
+        this.mTitle = mTitle;
+        this.mSongId = mSongId;
+        this.mAuthor = mAuthor;
+        this.mAlbumTitle = mAlbumTitle;
+    }
+
     public String getmTitle() {
         return mTitle;
     }
@@ -47,4 +55,5 @@ public class SongInfo {
     public void setmAlbumTitle(String mAlbumTitle) {
         this.mAlbumTitle = mAlbumTitle;
     }
+
 }

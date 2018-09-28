@@ -27,8 +27,8 @@ public class HotSongListHolder extends BaseViewHolder<HotSongList>{
         ImageView mImageView = getView(R.id.rec_imv);
         TextView mTvInfo = getView(R.id.rec_img_info_tv);
         TextView mTvName = getView(R.id.rec_img_name_tv);
-        Glide.with(mContext).load(data.getmPicPath()).into(mImageView);
-        mTvInfo.setText(data.getmTitle());
-        mTvName.setText(data.getmTag());
+        Glide.with(mContext).load(data.getMPicPath()).into(mImageView);
+        mTvInfo.setText(data.getMTitle());
+        mTvName.setText(data.getMTag());
     }
 }
