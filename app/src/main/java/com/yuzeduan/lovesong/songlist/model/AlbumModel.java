@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.yuzeduan.lovesong.music.bean.Song;
 import com.yuzeduan.lovesong.songlist.bean.AlbumInfo;
 import com.yuzeduan.lovesong.songlist.db.AlbumInfodao;
 import com.yuzeduan.lovesong.util.HttpUtil;
@@ -47,7 +48,25 @@ public class AlbumModel {
             });
         }
     }
+
+    public void getSelectSongData(String songId, final AlbumListener listener){
+        String address = MusicApi.Song.songInfo(songId);
+        HttpUtil.sendHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                Song song = ParseJsonUtil.parseSongUtil(str);
+                listener.onSelectSongDataFinish(song);
+            }
+        });
+    }
+
     public interface AlbumListener{
         void onAlbumDataFinish(List<AlbumInfo> list);
+        void onSelectSongDataFinish(Song song);
     }
 }

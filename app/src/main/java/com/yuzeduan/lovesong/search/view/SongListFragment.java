@@ -8,14 +8,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.yuzeduan.lovesong.R;
 import com.yuzeduan.lovesong.base.BaseFragment;
 import com.yuzeduan.lovesong.base.CommonAdapter;
+import com.yuzeduan.lovesong.music.bean.Song;
 import com.yuzeduan.lovesong.search.MVPContract;
 import com.yuzeduan.lovesong.search.adapter.SongListAdapter;
 import com.yuzeduan.lovesong.search.bean.SearchSongList;
 import com.yuzeduan.lovesong.search.event.SearchMessageEvent;
+import com.yuzeduan.lovesong.search.event.SongEvent;
 import com.yuzeduan.lovesong.search.presenter.SongPresenter;
 
 import java.util.List;
@@ -28,6 +31,7 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
     private String mSearchMsg;
     private RecyclerView mSongListRv;
     private SongListAdapter mAdapter;
+    private List<SearchSongList> mSearchSongList;
     private int mPageNo = 2;
     private int time;
 
@@ -78,12 +82,16 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
     @Override
     public void showSongView(List<SearchSongList> list) {
         if(mAdapter == null){
+            mSearchSongList = list;
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
             mAdapter = new SongListAdapter(getContext(), list, R.layout.item_song);
             mSongListRv.setLayoutManager(manager);
             mSongListRv.setAdapter(mAdapter);
         }else {
-            mAdapter.setDataChange(list);
+            if(list != null){
+                mSearchSongList.addAll(list);
+                mAdapter.setDataChange(list);
+            }
         }
         initAdapterEvent();
     }
@@ -95,11 +103,31 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
                 mPresenter.getData(mSearchMsg, mPageNo++);
             }
         });
+        mAdapter.setmOnItemClickListener(new CommonAdapter.OnItemClickListener() {
+            @Override
+            public void OnItemClick(int position) {
+                String songId = mSearchSongList.get(position).getmSongId();
+                mPresenter.getSong(songId, 0);
+            }
+
+            @Override
+            public void OnItemViewClick(int position) {
+                String songId = mSearchSongList.get(position).getmSongId();
+                mPresenter.getSong(songId, 1);
+                Toast.makeText(getContext(), getContext().getResources().getString(R.string.addsong), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void sendSelectSong(Song song, int flag) {
+        EventBus.getDefault().post(new SongEvent(song, flag));
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
     public void getSearchMessageEvent(SearchMessageEvent event){
         mSearchMsg = event.getmSearchMessage();
+        EventBus.getDefault().removeStickyEvent(event);
         Log.d("SongFragment", "getSearchMessageEvent: "+mSearchMsg);
     }
 }

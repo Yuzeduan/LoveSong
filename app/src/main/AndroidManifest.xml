@@ -17,17 +17,27 @@
         <activity android:name=".main.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".recommend.view.BannerDetailActivity" />
         <activity android:name=".search.view.SearchActivity" />
-        <activity android:name=".songlist.view.SongListActivity"
+        <activity
+            android:name=".songlist.view.SongListActivity"
             android:label=""
-            android:theme="@style/ListActivityTheme"/>
-        <activity android:name=".songlist.view.AlbumListActivity"
+            android:theme="@style/ListActivityTheme" />
+        <activity
+            android:name=".songlist.view.AlbumListActivity"
             android:label=""
-            android:theme="@style/ListActivityTheme"/>
+            android:theme="@style/ListActivityTheme" />
+
+        <service
+            android:name=".music.service.MusicService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote">
+        </service>
     </application>
 
 </manifest>

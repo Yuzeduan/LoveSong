@@ -6,4 +6,5 @@
     <string name="queryhint">歌手, 音乐, 专辑</string>
     <string name="search">热门搜索</string>
     <string name="searchnull">无搜索结果</string>
+    <string name="addsong">添加歌曲成功</string>
 </resources>

@@ -2,16 +2,25 @@ package com.yuzeduan.lovesong.songlist.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.yuzeduan.lovesong.R;
+import com.yuzeduan.lovesong.base.CommonAdapter;
 import com.yuzeduan.lovesong.base.MVPActivity;
+import com.yuzeduan.lovesong.music.bean.Song;
+import com.yuzeduan.lovesong.music.event.MusicConditionEvent;
+import com.yuzeduan.lovesong.music.view.BottomPlayFragment;
 import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.event.AlbumEvent;
 import com.yuzeduan.lovesong.songlist.MVPContract;
@@ -26,13 +35,16 @@ import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
-public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, AlbumPresenter> implements MVPContract.IAlbumView{
+public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, AlbumPresenter> implements MVPContract.IAlbumView, CommonAdapter.OnItemClickListener{
     private AlbumList mAlbumList;
+    private List<AlbumInfo> mAlbumInfoList;
     private AlbumListAdapter mAdapter;
     private RecyclerView mSongRv;
     private Toolbar mToolbar;
     private TextView mTitleTv, mNameTv, mAuthorTv, mTimeTv;
     private ImageView mTitleIv, mLittleIv;
+    private BottomPlayFragment mBottomPlayFragment;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +76,6 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
         mLittleIv = findViewById(R.id.song_iv);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        initEvent();
     }
 
     @Override
@@ -78,20 +89,38 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
     }
 
     @Override
-    protected void loadData() {
-    }
-
-    @Override
     protected AlbumPresenter createPresenter() {
         return new AlbumPresenter();
     }
 
     @Override
     public void showAlbumList(List<AlbumInfo> list) {
+        mAlbumInfoList = list;
         LinearLayoutManager manager = new LinearLayoutManager(this);
         mAdapter = new AlbumListAdapter(this, list, R.layout.item_song);
         mSongRv.setLayoutManager(manager);
         mSongRv.setAdapter(mAdapter);
+        mAdapter.setmOnItemClickListener(this);
+    }
+
+    @Override
+    public void OnItemClick(int position) {
+        mPresenter.getSelectSongData(mAlbumInfoList.get(position).getMSongId(), 0);
+    }
+
+    @Override
+    public void OnItemViewClick(int position) {
+        mPresenter.getSelectSongData(mAlbumInfoList.get(position).getMSongId(), 1);
+        Toast.makeText(this, this.getResources().getString(R.string.addsong), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setSongToBottom(Song song, int flag) {
+        if(flag == 0){
+            mBottomPlayFragment.insetSongToPlay(song);
+        }else{
+            mBottomPlayFragment.insetSong(song);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
@@ -109,8 +138,29 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
         Glide.with(this)
              .load(mAlbumList.getMPicPath())
              .into(mLittleIv);
+        EventBus.getDefault().removeStickyEvent(event);
     }
 
-    private void initEvent(){
+    @Override
+    protected MusicConditionEvent getMusicCondition() {
+        return mBottomPlayFragment.getPlayerCondition();
+    }
+
+    @Subscribe(sticky = true)
+    public void getMusicConditionEvent(MusicConditionEvent event){
+        Log.d("AlbumListActivity", "getMusicConditionEvent: "+"收到消息");
+        mBottomPlayFragment = BottomPlayFragment.getInstance(event);
+        replaceFragment(mBottomPlayFragment);
+        EventBus.getDefault().removeStickyEvent(event);
+    }
+
+    /**
+     * 替换底部的FrameLayout
+     */
+    private void replaceFragment(Fragment fragment){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.song_bottom_layout, fragment);
+        transaction.commit();
     }
 }

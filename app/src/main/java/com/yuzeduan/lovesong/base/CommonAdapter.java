@@ -18,11 +18,11 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>{
     protected Context mContext;
     private List<T> mDatas;
     private int mLayoutId;
-    private OnItemClickListener mOnItemClickListener;
+    protected OnItemClickListener mOnItemClickListener;
     private onLoadMoreListener mOnLoadMoreListener;
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view){
@@ -94,6 +94,7 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>{
 
     public interface OnItemClickListener {
         void OnItemClick(int position);
+        void OnItemViewClick(int position);
     }
 
     /**

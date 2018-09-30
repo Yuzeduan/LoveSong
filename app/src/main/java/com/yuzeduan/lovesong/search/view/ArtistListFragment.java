@@ -1,7 +1,6 @@
 package com.yuzeduan.lovesong.search.view;
 
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -97,6 +96,7 @@ public class ArtistListFragment extends BaseFragment<MVPContract.IArtistView, Ar
     @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
     public void getSearchMessageEvent(SearchMessageEvent event){
         mSearchMsg = event.getmSearchMessage();
+        EventBus.getDefault().removeStickyEvent(event);
         Log.d("ArtistFragment", "getSearchMessageEvent: "+mSearchMsg);
     }
 }

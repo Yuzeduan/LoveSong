@@ -9,6 +9,7 @@ import android.webkit.WebView;
 
 import com.yuzeduan.lovesong.R;
 import com.yuzeduan.lovesong.base.BaseActivity;
+import com.yuzeduan.lovesong.music.event.MusicConditionEvent;
 
 public class BannerDetailActivity extends BaseActivity {
     private Toolbar mToolbar;
@@ -35,10 +36,6 @@ public class BannerDetailActivity extends BaseActivity {
         mWebView.loadUrl(mPath);
     }
 
-    @Override
-    protected void loadData() {
-    }
-
     private void initToolbar() {
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
@@ -53,5 +50,10 @@ public class BannerDetailActivity extends BaseActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected MusicConditionEvent getMusicCondition() {
+        return null;
     }
 }

@@ -98,6 +98,7 @@ public class AlbumListFragment extends BaseFragment<MVPContract.IAlbumView, Albu
     @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
     public void getSearchMessageEvent(SearchMessageEvent event){
         mSearchMsg = event.getmSearchMessage();
+        EventBus.getDefault().removeStickyEvent(event);
         Log.d("AlbumFragment", "getSearchMessageEvent: "+mSearchMsg);
     }
 }

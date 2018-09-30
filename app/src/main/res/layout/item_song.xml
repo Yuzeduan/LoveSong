@@ -51,11 +51,20 @@
         android:layout_marginEnd="10dp"/>
 
     <ImageButton
+        android:id="@+id/add_ibn"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_toStartOf="@id/iv"
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
+        android:background="@drawable/ic_add"/>
+
+    <ImageButton
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_toStartOf="@id/add_ibn"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/ic_song"/>
 
     <TextView

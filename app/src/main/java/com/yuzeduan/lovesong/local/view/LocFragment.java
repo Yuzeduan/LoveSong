@@ -10,20 +10,24 @@ import android.widget.TextView;
 
 import com.yuzeduan.lovesong.R;
 import com.yuzeduan.lovesong.base.BaseFragment;
+import com.yuzeduan.lovesong.base.CommonAdapter;
 import com.yuzeduan.lovesong.local.MVPContract;
 import com.yuzeduan.lovesong.local.adapter.LocAdapter;
 import com.yuzeduan.lovesong.local.bean.MusicInfo;
 import com.yuzeduan.lovesong.local.presenter.LocPresenter;
+import com.yuzeduan.lovesong.main.view.MainActivity;
+import com.yuzeduan.lovesong.music.bean.Song;
 import com.yuzeduan.lovesong.widget.IndexBar;
 
 import java.util.List;
 
-public class LocFragment extends BaseFragment<MVPContract.IView, LocPresenter> implements MVPContract.IView{
+public class LocFragment extends BaseFragment<MVPContract.IView, LocPresenter> implements MVPContract.IView, CommonAdapter.OnItemClickListener{
     private RecyclerView mRecycleView;
     private IndexBar mIndexBar;
     private TextView mCenterTv;
     private LinearLayoutManager mLinearLayoutManager;
     private LocAdapter mLocAdapter;
+    private List<MusicInfo> mMusicInfoList;
 
     @Override
     protected LocPresenter createPresenter() {
@@ -66,12 +70,27 @@ public class LocFragment extends BaseFragment<MVPContract.IView, LocPresenter> i
 
     @Override
     public void showMusicList(List<MusicInfo> list) {
+        mMusicInfoList = list;
         mRecycleView.setLayoutManager(mLinearLayoutManager);
-        mLocAdapter = new LocAdapter(getContext(), list, R.layout.item_local);
+        mLocAdapter = new LocAdapter(getContext(), mMusicInfoList, R.layout.item_local);
+        mLocAdapter.setmOnItemClickListener(this);
         mRecycleView.setAdapter(mLocAdapter);
     }
 
     @Override
     protected void refreshView() {
+    }
+
+    @Override
+    public void OnItemClick(int position) {
+        List<Song> list =  mPresenter.getSongData(mMusicInfoList);
+        MainActivity activity = (MainActivity)getActivity();
+        if(activity != null) {
+            activity.setLocalSongListToBottom(list, position);
+        }
+    }
+
+    @Override
+    public void OnItemViewClick(int position) {
     }
 }

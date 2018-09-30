@@ -2,8 +2,12 @@ package com.yuzeduan.lovesong.main.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -13,6 +17,9 @@ import com.yuzeduan.lovesong.R;
 import com.yuzeduan.lovesong.base.BaseActivity;
 import com.yuzeduan.lovesong.local.view.LocFragment;
 import com.yuzeduan.lovesong.main.adapter.FragAdapter;
+import com.yuzeduan.lovesong.music.bean.Song;
+import com.yuzeduan.lovesong.music.event.MusicConditionEvent;
+import com.yuzeduan.lovesong.music.view.BottomPlayFragment;
 import com.yuzeduan.lovesong.recommend.view.RecFragment;
 import com.yuzeduan.lovesong.search.view.SearchActivity;
 import com.yuzeduan.lovesong.util.PermissionUtil;
@@ -20,12 +27,28 @@ import com.yuzeduan.lovesong.util.PermissionUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+
 public class MainActivity extends BaseActivity {
     private FragAdapter mFragAdapter;
     private ViewPager mViewPager;
     private RadioButton mRecBtn, mLocBtn;
     private RadioGroup mRadioGroup;
     private ImageView mImageView;
+    private BottomPlayFragment mBottomFragment;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     protected void initVariables() {
@@ -33,6 +56,7 @@ public class MainActivity extends BaseActivity {
         mFragments.add(new RecFragment());
         mFragments.add(new LocFragment());
         mFragAdapter = new FragAdapter(getSupportFragmentManager(), mFragments);
+        mBottomFragment = new BottomPlayFragment();
     }
 
     @Override
@@ -45,6 +69,7 @@ public class MainActivity extends BaseActivity {
         mViewPager = findViewById(R.id.main_viewpager);
         mViewPager.setAdapter(mFragAdapter);
         PermissionUtil.requestAllPower(this);
+        replaceFragment(mBottomFragment);
         initPagerEvent();
         initClick();
     }
@@ -85,6 +110,31 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void loadData() {
+    protected MusicConditionEvent getMusicCondition() {
+        return mBottomFragment.getPlayerCondition();
+    }
+
+    @Subscribe(sticky = true)
+    public void getMusicConditionEvent(MusicConditionEvent event){
+        mBottomFragment.setConditionEvent(event);
+    }
+
+    /**
+     * 将本地音乐的音乐列表传递给播放栏,并且传递点击的歌曲位置
+     * @param list
+     * @param position
+     */
+    public void setLocalSongListToBottom(List<Song> list, int position){
+        mBottomFragment.setSongList(list, position);
+    }
+
+    /**
+     * 替换底部的FrameLayout
+     */
+    private void replaceFragment(Fragment fragment){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.main_bottom_layout, fragment);
+        transaction.commit();
     }
 }

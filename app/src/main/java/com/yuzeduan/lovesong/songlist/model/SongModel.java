@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.yuzeduan.lovesong.music.bean.Song;
 import com.yuzeduan.lovesong.songlist.bean.SongInfo;
 import com.yuzeduan.lovesong.songlist.bean.SongInfoJsonBean;
 import com.yuzeduan.lovesong.songlist.db.SongInfoJsonBeandao;
@@ -56,7 +57,24 @@ public class SongModel {
         }
     }
 
+    public void getSelectSongData(final String songId, final SongListener listener){
+        String address = MusicApi.Song.songInfo(songId);
+        HttpUtil.sendHttpRequest(address, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String str = response.body().string();
+                Song song = ParseJsonUtil.parseSongUtil(str);
+                listener.onSelectSongDataFinish(song);
+            }
+        });
+    }
+
     public interface SongListener{
         void onSongDataFinish(List<SongInfo> list);
+        void onSelectSongDataFinish(Song song);
     }
 }

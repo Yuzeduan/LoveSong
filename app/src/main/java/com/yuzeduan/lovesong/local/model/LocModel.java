@@ -67,4 +67,6 @@ public class LocModel {
         });
         return list;
     }
+
+
 }

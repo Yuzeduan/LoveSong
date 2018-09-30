@@ -1,5 +1,8 @@
 package com.yuzeduan.lovesong.util;
 
+import com.yuzeduan.lovesong.music.bean.Song;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,4 +51,33 @@ public class ParseJsonUtil {
         }
         return null;
     }
+
+    /**
+     * 解析歌曲JSON数据
+     * @param jsonData
+     * @return
+     */
+    public static Song parseSongUtil(String jsonData){
+        try {
+            Song song = new Song();
+            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONObject songUrl = jsonObject.getJSONObject("songurl");
+            JSONArray url = songUrl.getJSONArray("url");
+            JSONObject obj = url.getJSONObject(0);
+            song.setmSongAddress(obj.getString("show_link"));
+            JSONObject songInfo = jsonObject.getJSONObject("songinfo");
+            song.setmSongName(songInfo.getString("title"));
+            song.setmArtist(songInfo.getString("artist"));
+            song.setmHugePicPath(songInfo.getString("pic_huge"));
+            song.setmSmallPicPath(songInfo.getString("pic_radio"));
+            song.setmLrcLink(songInfo.getString("lrclink"));
+            song.setLocal(false);
+            song.setmSongId(songInfo.getString("song_id"));
+            return song;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
