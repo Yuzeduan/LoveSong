@@ -13,11 +13,13 @@ import java.util.List;
 public class MusicConditionEvent implements Serializable{
     private List<Song> mList;
     private int mPosition;
+    private int mPlayMode;
     private boolean isPlay;
 
-    public MusicConditionEvent(List<Song> mList, int mPosition, boolean isPlay) {
+    public MusicConditionEvent(List<Song> mList, int mPosition, int mPlayMode, boolean isPlay) {
         this.mList = mList;
         this.mPosition = mPosition;
+        this.mPlayMode = mPlayMode;
         this.isPlay = isPlay;
     }
 
@@ -43,5 +45,13 @@ public class MusicConditionEvent implements Serializable{
 
     public void setPlay(boolean play) {
         isPlay = play;
+    }
+
+    public int getmPlayMode() {
+        return mPlayMode;
+    }
+
+    public void setmPlayMode(int mPlayMode) {
+        this.mPlayMode = mPlayMode;
     }
 }

@@ -1,10 +1,12 @@
 package com.yuzeduan.lovesong.music.view;
 
+import android.content.BroadcastReceiver;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,6 +24,7 @@ import com.yuzeduan.lovesong.music.MusicManager;
 import com.yuzeduan.lovesong.music.bean.Song;
 import com.yuzeduan.lovesong.music.event.MusicConditionEvent;
 import com.yuzeduan.lovesong.util.LocalMusicUtil;
+import com.yuzeduan.lovesong.util.WindowUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +34,9 @@ import java.util.List;
  * date: On 2018/9/28
  */
 public class BottomPlayFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
+    public static final int LIST_PLAY = 0;
+    public static final int RANDOM_PLAY = 1;
+    public static final int ONE_CICAL = 2;
     private View mView;
     private RelativeLayout mFooterLayout;
     private ImageView mPicIv;
@@ -38,6 +45,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     private CheckBox mCbPlay;
     private List<Song> mSongList;
     private int mPosition;
+    private int mPlayMode;  // 播放的模式
     private MusicManager mMusicManager;
 
     /**
@@ -72,6 +80,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         mNextIbn = mView.findViewById(R.id.next_ibn);
         mListIbn = mView.findViewById(R.id.list_ibn);
         mPosition = 0;
+        mPlayMode = LIST_PLAY;
         mSongList = new ArrayList<>();
         mMusicManager = MusicManager.getInstance();
     }
@@ -168,7 +177,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         if(mSongList != null){
             songList.addAll(mSongList);
         }
-        return new MusicConditionEvent(songList, mPosition, mCbPlay.isChecked());
+        return new MusicConditionEvent(songList, mPosition, mPlayMode, mCbPlay.isChecked());
     }
 
     private void initEvent(){
@@ -191,16 +200,51 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.footer_layout:
+                //展示播放主界面
                 break;
             case R.id.next_ibn:
-                if(mSongList.size() > 1){
-                    mPosition++;
-                    showNextSong(mSongList.get(mPosition));
-                }
+                checkNextSong();
                 break;
             case R.id.list_ibn:
+                initPopupWindow();
                 break;
         }
+    }
+
+    /**
+     *根据播放模式,选择点击下一首时播放的歌曲
+     */
+    private void checkNextSong() {
+        switch(mPlayMode){
+            case LIST_PLAY:
+                if(mSongList.size() > mPosition + 1){
+                    mPosition++;
+                }else if(mSongList.size() == mPosition + 1){
+                    mPosition = 0;
+                }
+                break;
+            case RANDOM_PLAY:
+                mPosition = (int) (Math.random() * mSongList.size() - 1);
+                break;
+            case ONE_CICAL:
+                break;
+        }
+        if(mSongList.size() > 0){
+            showNextSong(mSongList.get(mPosition));
+        }
+    }
+
+    private void initPopupWindow() {
+        SongPopupWindow mSongPopupWindow = new SongPopupWindow(getContext(), this, mSongList);
+        mSongPopupWindow.setAnimationStyle(R.style.popwin_anim_style);
+        mSongPopupWindow.showAsDropDown(mFooterLayout, Gravity.BOTTOM,0 );
+        WindowUtil.lightOffWindow(getActivity());
+        mSongPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                WindowUtil.lightOnWindow(getActivity());
+            }
+        });
     }
 
     @Override
@@ -210,5 +254,33 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         }else {
             mMusicManager.onPauseMusic();
         }
+    }
+
+    public MusicManager getmMusicManager() {
+        return mMusicManager;
+    }
+
+    public int getmPosition() {
+        return mPosition;
+    }
+
+    public void setmPosition(int mPosition) {
+        this.mPosition = mPosition;
+    }
+
+    public void setmSongList(List<Song> mSongList) {
+        this.mSongList = mSongList;
+    }
+
+    public List<Song> getmSongList() {
+        return mSongList;
+    }
+
+    public int getmPlayMode() {
+        return mPlayMode;
+    }
+
+    public void setmPlayMode(int mPlayMode) {
+        this.mPlayMode = mPlayMode;
     }
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/popup_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <Button
+            android:id="@+id/popup_bn"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            />
+        <ImageButton
+            android:id="@+id/popup_deleteall_ibn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ic_deleate"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/left_tv"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_below="@id/popup_layout"
+        android:background="@color/gainsboro"
+        android:layout_marginTop="5dp"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/popup_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/left_tv">
+    </android.support.v7.widget.RecyclerView>
+</RelativeLayout>

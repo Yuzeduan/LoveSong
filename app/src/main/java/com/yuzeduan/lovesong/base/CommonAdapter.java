@@ -105,7 +105,11 @@ public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>{
         if(list != null){
             mDatas.addAll(list);
         }
-        Log.d("onLoadmore", "setDataChange: "+"加载更多");
+        notifyDataSetChanged();
+    }
+
+    public void setmDatas(List<T> mDatas) {
+        this.mDatas = mDatas;
         notifyDataSetChanged();
     }
 
