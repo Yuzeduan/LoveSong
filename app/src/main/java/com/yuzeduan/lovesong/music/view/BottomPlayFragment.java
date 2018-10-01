@@ -1,6 +1,5 @@
 package com.yuzeduan.lovesong.music.view;
 
-import android.content.BroadcastReceiver;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -111,6 +110,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
                 showView(song);
             }
             mCbPlay.setChecked(conditionEvent.isPlay());
+            mPlayMode = conditionEvent.getmPlayMode();
         }
     }
 
@@ -131,12 +131,25 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     }
 
     /**
-     * 添加歌曲到播放列表不进行播放
+     * 添加歌曲到播放列表不进行播放,如果列表为空,添加后就播放
      */
     public void insetSong(Song song){
-        if(mSongList != null){
-            mSongList.add(song);
+        if(mSongList.size() == 0){
+            // 如果添加歌曲之前歌曲列表为空,则添加之后,播放该歌曲
+            mMusicManager.setSong(song.getmSongAddress());
+            showView(song);
         }
+        mSongList.add(song);
+    }
+
+    /**
+     * 判断事件的内容是否相同,用于活动确定上次接收的事件和本次接收事件内容是否相同
+     */
+    public boolean isEventSame(MusicConditionEvent event, MusicConditionEvent nextEvent){
+        return (event != null && event.getmPosition() == nextEvent.getmPosition()
+                    && event.getmPlayMode() == nextEvent.getmPlayMode()
+                    && event.isPlay() == nextEvent.isPlay()
+                    && event.getmList().size() == nextEvent.getmList().size());
     }
 
     /**
@@ -235,9 +248,9 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     }
 
     private void initPopupWindow() {
-        SongPopupWindow mSongPopupWindow = new SongPopupWindow(getContext(), this, mSongList);
+        SongPopupWindow mSongPopupWindow = new SongPopupWindow(getActivity(), this, mSongList);
         mSongPopupWindow.setAnimationStyle(R.style.popwin_anim_style);
-        mSongPopupWindow.showAsDropDown(mFooterLayout, Gravity.BOTTOM,0 );
+        mSongPopupWindow.showAtLocation(mFooterLayout, Gravity.BOTTOM,0,0 );
         WindowUtil.lightOffWindow(getActivity());
         mSongPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override

@@ -23,6 +23,9 @@ public class MusicConditionEvent implements Serializable{
         this.isPlay = isPlay;
     }
 
+    public MusicConditionEvent() {
+    }
+
     public List<Song> getmList() {
         return mList;
     }

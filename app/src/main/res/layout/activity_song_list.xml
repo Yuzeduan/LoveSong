@@ -103,7 +103,8 @@
         android:id="@+id/song_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        android:visibility="gone">
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

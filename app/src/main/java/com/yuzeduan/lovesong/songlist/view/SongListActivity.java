@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +44,9 @@ public class SongListActivity extends MVPActivity<MVPContract.ISongView, SongPre
     private Toolbar mToolbar;
     private TextView mTitleTv, mNameTv, mTagTv;
     private ImageView mTitleIv, mLittleIv;
+    private FrameLayout mBottomLayout;
     private BottomPlayFragment mBottomPlayFragment;
+    private MusicConditionEvent mLastEvent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +74,7 @@ public class SongListActivity extends MVPActivity<MVPContract.ISongView, SongPre
         mLittleIv = findViewById(R.id.song_iv);
         mNameTv = findViewById(R.id.song_name_tv);
         mTagTv = findViewById(R.id.song_author_tv);
+        mBottomLayout = findViewById(R.id.song_bottom_layout);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -147,12 +152,18 @@ public class SongListActivity extends MVPActivity<MVPContract.ISongView, SongPre
 
     @Subscribe(sticky = true)
     public void getMusicConditionEvent(MusicConditionEvent event){
-        mBottomPlayFragment = BottomPlayFragment.getInstance(event);
-        replaceFragment(mBottomPlayFragment);
+        if(mBottomPlayFragment == null){
+            mBottomPlayFragment = BottomPlayFragment.getInstance(event);
+            replaceFragment(mBottomPlayFragment);
+        }else if(!mBottomPlayFragment.isEventSame(mLastEvent, event)){
+            mBottomPlayFragment.setConditionEvent(event);
+        }
+        mLastEvent = event;
         EventBus.getDefault().removeStickyEvent(event);
     }
 
     private void replaceFragment(Fragment fragment){
+        mBottomLayout.setVisibility(View.VISIBLE);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.song_bottom_layout, fragment);

@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +45,9 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
     private Toolbar mToolbar;
     private TextView mTitleTv, mNameTv, mAuthorTv, mTimeTv;
     private ImageView mTitleIv, mLittleIv;
+    private FrameLayout mBottomLayout;
     private BottomPlayFragment mBottomPlayFragment;
+    private MusicConditionEvent mLastEvent;
 
 
     @Override
@@ -74,6 +78,7 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
         mAuthorTv = findViewById(R.id.song_author_tv);
         mTimeTv = findViewById(R.id.song_time_tv);
         mLittleIv = findViewById(R.id.song_iv);
+        mBottomLayout = findViewById(R.id.song_bottom_layout);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -148,9 +153,13 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
 
     @Subscribe(sticky = true)
     public void getMusicConditionEvent(MusicConditionEvent event){
-        Log.d("AlbumListActivity", "getMusicConditionEvent: "+"收到消息");
-        mBottomPlayFragment = BottomPlayFragment.getInstance(event);
-        replaceFragment(mBottomPlayFragment);
+        if(mBottomPlayFragment == null){
+            mBottomPlayFragment = BottomPlayFragment.getInstance(event);
+            replaceFragment(mBottomPlayFragment);
+        }else if(!mBottomPlayFragment.isEventSame(mLastEvent,event)){
+            mBottomPlayFragment.setConditionEvent(event);
+        }
+        mLastEvent = event;
         EventBus.getDefault().removeStickyEvent(event);
     }
 
@@ -158,6 +167,7 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
      * 替换底部的FrameLayout
      */
     private void replaceFragment(Fragment fragment){
+        mBottomLayout.setVisibility(View.VISIBLE);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.song_bottom_layout, fragment);

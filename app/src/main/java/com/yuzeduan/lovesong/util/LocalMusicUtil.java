@@ -90,7 +90,7 @@ public class LocalMusicUtil {
         //如果获取的bitmap为空，则返回一个默认的bitmap
         if (bm == null) {
             Resources resources = context.getResources();
-            Drawable drawable = resources.getDrawable(R.drawable.ic_no_pic);
+            Drawable drawable = resources.getDrawable(R.drawable.ic_lovesong);
             //Drawable 转 Bitmap
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             bm = bitmapDrawable.getBitmap();

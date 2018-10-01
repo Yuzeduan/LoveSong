@@ -7,8 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -36,7 +36,9 @@ public class MainActivity extends BaseActivity {
     private RadioButton mRecBtn, mLocBtn;
     private RadioGroup mRadioGroup;
     private ImageView mImageView;
+    private FrameLayout mBottomLayout;
     private BottomPlayFragment mBottomFragment;
+    private MusicConditionEvent mLastEvent; // 记录前一次的事件的信息
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +58,6 @@ public class MainActivity extends BaseActivity {
         mFragments.add(new RecFragment());
         mFragments.add(new LocFragment());
         mFragAdapter = new FragAdapter(getSupportFragmentManager(), mFragments);
-        mBottomFragment = new BottomPlayFragment();
     }
 
     @Override
@@ -67,11 +68,20 @@ public class MainActivity extends BaseActivity {
         mImageView = findViewById(R.id.main_top_right);
         mRadioGroup = findViewById(R.id.main_top_rg);
         mViewPager = findViewById(R.id.main_viewpager);
+        mBottomLayout = findViewById(R.id.main_bottom_layout);
         mViewPager.setAdapter(mFragAdapter);
         PermissionUtil.requestAllPower(this);
-        replaceFragment(mBottomFragment);
+        initBottomFragment();
         initPagerEvent();
         initClick();
+    }
+
+    /**
+     * 打开主活动时候,根据缓存的播放列表是否有歌曲,展示播放栏
+     */
+    private void initBottomFragment() {
+        mBottomFragment = new BottomPlayFragment();
+        replaceFragment(mBottomFragment);
     }
 
     private void initPagerEvent() {
@@ -116,7 +126,14 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe(sticky = true)
     public void getMusicConditionEvent(MusicConditionEvent event){
-        mBottomFragment.setConditionEvent(event);
+        if(mBottomFragment == null){
+            mBottomFragment = BottomPlayFragment.getInstance(event);
+            replaceFragment(mBottomFragment);
+        }else if(!mBottomFragment.isEventSame(mLastEvent, event)){
+            // 如果两次事件信息不同,则要重置状态栏
+            mBottomFragment.setConditionEvent(event);
+        }
+        mLastEvent = event;
     }
 
     /**
@@ -132,6 +149,7 @@ public class MainActivity extends BaseActivity {
      * 替换底部的FrameLayout
      */
     private void replaceFragment(Fragment fragment){
+        mBottomLayout.setVisibility(View.VISIBLE);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.main_bottom_layout, fragment);

@@ -9,6 +9,7 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.yuzeduan.lovesong.R;
@@ -31,6 +32,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     private ImageButton mImageButton;
     private SearchView mSearchView;
     private BottomPlayFragment mBottomPlayFragment;
+    private FrameLayout mBottomLayout;
+    private MusicConditionEvent mLastEvent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
         setContentView(R.layout.activity_search);
         mImageButton = findViewById(R.id.back_ibn);
         mSearchView = findViewById(R.id.search_sv);
+        mBottomLayout = findViewById(R.id.search_bottom_layout);
         mSearchView.setOnQueryTextListener(this);
         replaceFragment(R.id.below_flt, new HotWordFragment());
         initClick();
@@ -96,6 +100,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
      * @param fragment
      */
     private void replaceFragment(int viewId, Fragment fragment){
+        mBottomLayout.setVisibility(View.VISIBLE);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(viewId, fragment);
@@ -109,8 +114,13 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Subscribe(sticky = true)
     public void getMusicConditionEvent(MusicConditionEvent event){
-        mBottomPlayFragment = BottomPlayFragment.getInstance(event);
-        replaceFragment(R.id.search_bottom_layout, mBottomPlayFragment);
+        if(mBottomPlayFragment == null){
+            mBottomPlayFragment = BottomPlayFragment.getInstance(event);
+            replaceFragment(R.id.search_bottom_layout, mBottomPlayFragment);
+        }else if(!mBottomPlayFragment.isEventSame(mLastEvent, event)){
+            mBottomPlayFragment.setConditionEvent(event);
+        }
+        mLastEvent = event;
         EventBus.getDefault().removeStickyEvent(event);
     }
 

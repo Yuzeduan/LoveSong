@@ -1,8 +1,13 @@
 package com.yuzeduan.lovesong.music.view;
 
+import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,13 +46,15 @@ public class SongPopupWindow extends PopupWindow implements CommonAdapter.OnItem
     private PupListAdapter mAdapter;
     private int mPosition;
     private int mPlayMode;
+    private int mListSize;
     private PopHandler mPopHandler;
 
     SongPopupWindow(Context mContext, BottomPlayFragment mBottomPlayFragment, List<Song> mSongList) {
         this.mContext = mContext;
         this.mBottomPlayFragment = mBottomPlayFragment;
         this.mSongList = mSongList;
-        this.mPosition = mBottomPlayFragment.getmSongList().size();
+        this.mPosition = mBottomPlayFragment.getmPosition();
+        this.mListSize = mBottomPlayFragment.getmSongList().size();
         this.mPlayMode = mBottomPlayFragment.getmPlayMode();
         this.mPopHandler = new PopHandler(this);
         this.mCovertView = LayoutInflater.from(mContext).inflate(R.layout.popup_song, null);
@@ -78,13 +85,13 @@ public class SongPopupWindow extends PopupWindow implements CommonAdapter.OnItem
         String text = null;
         switch (mPlayMode){
             case LIST_PLAY:
-                text = StringConcatUtil.concatString("列表播放 ","( ",mPosition+" )");
+                text = StringConcatUtil.concatString("列表播放 ","( ",mListSize+" )");
                 break;
             case RANDOM_PLAY:
-                text = StringConcatUtil.concatString("随机播放 ","( ",mPosition+" )");
+                text = StringConcatUtil.concatString("随机播放 ","( ",mListSize+" )");
                 break;
             case ONE_CICAL:
-                text = StringConcatUtil.concatString("单曲循环 ","( ",mPosition+" )");
+                text = StringConcatUtil.concatString("单曲循环 ","( ",mListSize+" )");
                 break;
         }
         mPupBn.setText(text);
@@ -110,9 +117,15 @@ public class SongPopupWindow extends PopupWindow implements CommonAdapter.OnItem
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.popup_deleteall_ibn:
-                mBottomPlayFragment.getmSongList().clear();
+                Song song = mSongList.get(mPosition);
                 mSongList.clear();
+                mSongList.add(song);
+                mBottomPlayFragment.setmSongList(mSongList);
                 mAdapter.setmDatas(mSongList);
+                mListSize = mSongList.size();
+                mPosition = 0;
+                mBottomPlayFragment.setmPosition(mPosition);
+                mPopHandler.sendEmptyMessage(0);
                 break;
             case R.id.popup_bn:
                 mPlayMode = (mPlayMode+1)%3;
@@ -124,17 +137,26 @@ public class SongPopupWindow extends PopupWindow implements CommonAdapter.OnItem
 
     @Override
     public void OnItemClick(int position) {
-        Song song = mSongList.get(position);
-        mBottomPlayFragment.showNextSong(song);
+        if(position != mPosition){
+            Song song = mSongList.get(position);
+            mBottomPlayFragment.showNextSong(song);
+            mBottomPlayFragment.setmPosition(position);
+        }
     }
 
     @Override
     public void OnItemViewClick(int position) {
-        mBottomPlayFragment.getmSongList().remove(position);
-        mSongList.remove(position);
-        mAdapter.setmDatas(mSongList);
-        mPosition--;
-        mPopHandler.sendEmptyMessage(0);
+        if(position != mPosition){
+            mBottomPlayFragment.getmSongList().remove(position);
+            mSongList.remove(position);
+            mAdapter.setmDatas(mSongList);
+            mListSize--;
+            if(position < mPosition){
+                mPosition--;
+                mBottomPlayFragment.setmPosition(mPosition);
+            }
+            mPopHandler.sendEmptyMessage(0);
+        }
     }
 
     /**

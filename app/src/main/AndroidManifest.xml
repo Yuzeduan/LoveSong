@@ -9,17 +9,12 @@
     <application
         android:name=".util.LoveSongApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_lovesong"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_lovesong"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".main.view.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".recommend.view.BannerDetailActivity" />
         <activity android:name=".search.view.SearchActivity" />
@@ -38,6 +33,13 @@
             android:exported="true"
             android:process=":remote">
         </service>
+
+        <activity android:name=".welcome.WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
