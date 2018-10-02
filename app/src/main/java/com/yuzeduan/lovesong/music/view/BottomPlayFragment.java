@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,8 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     private int mPosition;
     private int mPlayMode;  // 播放的模式
     private MusicManager mMusicManager;
+    private boolean isFirst;
+    private Song mFirstSong;
 
     /**
      * 根据传进的音乐播放栏的状态构建出新的播放栏
@@ -107,7 +110,8 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
             mSongList.addAll(songList);
             if(mSongList.size() != 0){
                 Song song = mSongList.get(mPosition);
-                showView(song);
+                mFirstSong = song;
+                showView(song,0);
             }
             mCbPlay.setChecked(conditionEvent.isPlay());
             mPlayMode = conditionEvent.getmPlayMode();
@@ -127,7 +131,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
             mSongList.add(mPosition, song);
         }
         mMusicManager.setSong(song.getmSongAddress());
-        showView(song);
+        showView(song, 1);
     }
 
     /**
@@ -137,7 +141,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         if(mSongList.size() == 0){
             // 如果添加歌曲之前歌曲列表为空,则添加之后,播放该歌曲
             mMusicManager.setSong(song.getmSongAddress());
-            showView(song);
+            showView(song, 1);
         }
         mSongList.add(song);
     }
@@ -162,15 +166,15 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         mSongList.clear();
         mSongList.addAll(list);
         mPosition = position;
-        showView(song);
+        showView(song, 1);
     }
 
-    private void showView(Song song){
+    private void showView(Song song, int flag){
         mSongNameTv.setText(song.getmSongName());
         mSongAuthorTv.setText(song.getmArtist());
         if(mCbPlay.isChecked()){
             mMusicManager.onPlayMusic();
-        }else{
+        }else if(flag == 1){
             mCbPlay.setChecked(true);
         }
         if(song.isLocal()){
@@ -206,7 +210,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
      */
     public void showNextSong(Song song){
         mMusicManager.setSong(song.getmSongAddress());
-        showView(song);
+        showView(song,1);
     }
 
     @Override
@@ -216,6 +220,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
                 //展示播放主界面
                 break;
             case R.id.next_ibn:
+                isFirst = false;
                 checkNextSong();
                 break;
             case R.id.list_ibn:
@@ -263,6 +268,10 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (b){
+            if(isFirst){
+                mMusicManager.setSong(mFirstSong.getmSongAddress());
+                isFirst = false;
+            }
             mMusicManager.onPlayMusic();
         }else {
             mMusicManager.onPauseMusic();
@@ -295,5 +304,9 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
 
     public void setmPlayMode(int mPlayMode) {
         this.mPlayMode = mPlayMode;
+    }
+
+    public void setFirst(boolean first) {
+        isFirst = first;
     }
 }

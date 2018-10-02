@@ -121,7 +121,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
             mBottomPlayFragment.setConditionEvent(event);
         }
         mLastEvent = event;
-        EventBus.getDefault().removeStickyEvent(event);
     }
 
     /**

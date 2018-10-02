@@ -11,6 +11,7 @@ import java.util.List;
  * author: Allen
  * date: On 2018/9/28
  */
+@Deprecated
 public class HotWorddao {
     private DaoSession mDaoSession;
     private HotWordDao mHotWordDao;

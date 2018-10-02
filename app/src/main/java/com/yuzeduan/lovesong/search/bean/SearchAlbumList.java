@@ -12,6 +12,8 @@ public class SearchAlbumList {
     private String mAlbumId;
     @SerializedName("pic_small")
     private String mPicPath;
+    @SerializedName("publishtime")
+    private String mPublishTime;
     @SerializedName("author")
     private String mAuthor;
 
@@ -45,5 +47,13 @@ public class SearchAlbumList {
 
     public void setmAuthor(String mAuthor) {
         this.mAuthor = mAuthor;
+    }
+
+    public String getmPublishTime() {
+        return mPublishTime;
+    }
+
+    public void setmPublishTime(String mPublishTime) {
+        this.mPublishTime = mPublishTime;
     }
 }

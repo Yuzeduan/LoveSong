@@ -25,6 +25,8 @@ import com.yuzeduan.lovesong.music.event.MusicConditionEvent;
 import com.yuzeduan.lovesong.music.view.BottomPlayFragment;
 import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.event.AlbumEvent;
+import com.yuzeduan.lovesong.search.bean.SearchAlbumList;
+import com.yuzeduan.lovesong.search.event.SearchAlbumEvent;
 import com.yuzeduan.lovesong.songlist.MVPContract;
 import com.yuzeduan.lovesong.songlist.adapter.AlbumListAdapter;
 import com.yuzeduan.lovesong.songlist.bean.AlbumInfo;
@@ -130,20 +132,37 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
 
     @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
     public void getAlbumEvent(AlbumEvent event){
-        mAlbumList= event.getmItem();
+        AlbumList mAlbumList = event.getmItem();
         mPresenter.getData(mAlbumList.getMAlbumId());
-        mTitleTv.setText(mAlbumList.getMTitle());
-        mNameTv.setText(mAlbumList.getMTitle());
-        mAuthorTv.setText("歌手:"+mAlbumList.getMAuthor());
-        mTimeTv.setText("发行时间:"+mAlbumList.getMPublishTime());
-        Glide.with(this)
-             .load(mAlbumList.getMPicPath())
-             .bitmapTransform(new BlurTransformation(this, 14, 3))
-             .into(mTitleIv);
-        Glide.with(this)
-             .load(mAlbumList.getMPicPath())
-             .into(mLittleIv);
+        initCollLayout(mAlbumList.getMTitle(), mAlbumList.getMAuthor(),
+                mAlbumList.getMPublishTime(), mAlbumList.getMPicPath());
         EventBus.getDefault().removeStickyEvent(event);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
+    public void getSearchEvent(SearchAlbumEvent event){
+        SearchAlbumList item = event.getmItem();
+        mPresenter.getData(item.getmAlbumId());
+        initCollLayout(item.getmTitle(), item.getmAuthor(),
+                item.getmPublishTime(), item.getmPicPath());
+        EventBus.getDefault().removeStickyEvent(event);
+    }
+
+    /**
+     * 设置折叠标题栏的元素的内容
+     */
+    public void initCollLayout(String title, String artistName, String publishTime, String picPath ){
+        mTitleTv.setText(title);
+        mNameTv.setText(title);
+        mAuthorTv.setText("歌手:"+ artistName);
+        mTimeTv.setText("发行时间:"+ publishTime);
+        Glide.with(this)
+                .load(picPath)
+                .bitmapTransform(new BlurTransformation(this, 14, 3))
+                .into(mTitleIv);
+        Glide.with(this)
+                .load(picPath)
+                .into(mLittleIv);
     }
 
     @Override

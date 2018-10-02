@@ -28,20 +28,19 @@ public class ArtistListFragment extends BaseFragment<MVPContract.IArtistView, Ar
     private String mSearchMsg;
     private RecyclerView mArtistListRv;
     private ArtistListAdapter mAdapter;
+    private List<SearchArtistList> mArtistList;
     private int mPageNo = 2;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        Log.d("ArtistFragment", "onCreate: "+"调用了");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        Log.d("ArtistFragment", "onDestroy: "+"调用了");
     }
 
     @Override
@@ -58,10 +57,6 @@ public class ArtistListFragment extends BaseFragment<MVPContract.IArtistView, Ar
 
     @Override
     protected void lazyLoad() {
-        if(isPrepared && isVisible && isFirst){
-            Log.d("ArtistFragment", "lazyLoad: "+mSearchMsg);
-            mPresenter.getData(mSearchMsg,1);
-        }
     }
 
     @Override
@@ -76,10 +71,16 @@ public class ArtistListFragment extends BaseFragment<MVPContract.IArtistView, Ar
     @Override
     public void showArtistView(List<SearchArtistList> list) {
         if(mAdapter == null){
+            mArtistList = list;
             LinearLayoutManager manager = new LinearLayoutManager(getContext());
             mAdapter = new ArtistListAdapter(getContext(), list, R.layout.item_search_other);
             mArtistListRv.setLayoutManager(manager);
             mArtistListRv.setAdapter(mAdapter);
+        }else{
+            if(list != null){
+                mArtistList.addAll(list);
+                mAdapter.setmDatas(mArtistList);
+            }
         }
         initAdapterEvent();
     }
@@ -96,7 +97,9 @@ public class ArtistListFragment extends BaseFragment<MVPContract.IArtistView, Ar
     @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
     public void getSearchMessageEvent(SearchMessageEvent event){
         mSearchMsg = event.getmSearchMessage();
-        EventBus.getDefault().removeStickyEvent(event);
-        Log.d("ArtistFragment", "getSearchMessageEvent: "+mSearchMsg);
+        mPresenter.getData(mSearchMsg,1);
+        if(mArtistList != null){
+            mArtistList.clear();
+        }
     }
 }

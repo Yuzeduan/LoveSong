@@ -8,6 +8,8 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.yuzeduan.lovesong.music.bean.playCondition;
+import com.yuzeduan.lovesong.music.bean.Song;
 import com.yuzeduan.lovesong.recommend.bean.AlbumList;
 import com.yuzeduan.lovesong.recommend.bean.FocusPic;
 import com.yuzeduan.lovesong.recommend.bean.HotSongList;
@@ -16,6 +18,8 @@ import com.yuzeduan.lovesong.search.bean.HotWord;
 import com.yuzeduan.lovesong.songlist.bean.AlbumInfo;
 import com.yuzeduan.lovesong.songlist.bean.SongInfoJsonBean;
 
+import com.yuzeduan.lovesong.db.playConditionDao;
+import com.yuzeduan.lovesong.db.SongDao;
 import com.yuzeduan.lovesong.db.AlbumListDao;
 import com.yuzeduan.lovesong.db.FocusPicDao;
 import com.yuzeduan.lovesong.db.HotSongListDao;
@@ -33,6 +37,8 @@ import com.yuzeduan.lovesong.db.SongInfoJsonBeanDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig playConditionDaoConfig;
+    private final DaoConfig songDaoConfig;
     private final DaoConfig albumListDaoConfig;
     private final DaoConfig focusPicDaoConfig;
     private final DaoConfig hotSongListDaoConfig;
@@ -41,6 +47,8 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig albumInfoDaoConfig;
     private final DaoConfig songInfoJsonBeanDaoConfig;
 
+    private final playConditionDao playConditionDao;
+    private final SongDao songDao;
     private final AlbumListDao albumListDao;
     private final FocusPicDao focusPicDao;
     private final HotSongListDao hotSongListDao;
@@ -52,6 +60,12 @@ public class DaoSession extends AbstractDaoSession {
     public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
+
+        playConditionDaoConfig = daoConfigMap.get(playConditionDao.class).clone();
+        playConditionDaoConfig.initIdentityScope(type);
+
+        songDaoConfig = daoConfigMap.get(SongDao.class).clone();
+        songDaoConfig.initIdentityScope(type);
 
         albumListDaoConfig = daoConfigMap.get(AlbumListDao.class).clone();
         albumListDaoConfig.initIdentityScope(type);
@@ -74,6 +88,8 @@ public class DaoSession extends AbstractDaoSession {
         songInfoJsonBeanDaoConfig = daoConfigMap.get(SongInfoJsonBeanDao.class).clone();
         songInfoJsonBeanDaoConfig.initIdentityScope(type);
 
+        playConditionDao = new playConditionDao(playConditionDaoConfig, this);
+        songDao = new SongDao(songDaoConfig, this);
         albumListDao = new AlbumListDao(albumListDaoConfig, this);
         focusPicDao = new FocusPicDao(focusPicDaoConfig, this);
         hotSongListDao = new HotSongListDao(hotSongListDaoConfig, this);
@@ -82,6 +98,8 @@ public class DaoSession extends AbstractDaoSession {
         albumInfoDao = new AlbumInfoDao(albumInfoDaoConfig, this);
         songInfoJsonBeanDao = new SongInfoJsonBeanDao(songInfoJsonBeanDaoConfig, this);
 
+        registerDao(playCondition.class, playConditionDao);
+        registerDao(Song.class, songDao);
         registerDao(AlbumList.class, albumListDao);
         registerDao(FocusPic.class, focusPicDao);
         registerDao(HotSongList.class, hotSongListDao);
@@ -92,6 +110,8 @@ public class DaoSession extends AbstractDaoSession {
     }
     
     public void clear() {
+        playConditionDaoConfig.clearIdentityScope();
+        songDaoConfig.clearIdentityScope();
         albumListDaoConfig.clearIdentityScope();
         focusPicDaoConfig.clearIdentityScope();
         hotSongListDaoConfig.clearIdentityScope();
@@ -99,6 +119,14 @@ public class DaoSession extends AbstractDaoSession {
         hotWordDaoConfig.clearIdentityScope();
         albumInfoDaoConfig.clearIdentityScope();
         songInfoJsonBeanDaoConfig.clearIdentityScope();
+    }
+
+    public playConditionDao getPlayConditionDao() {
+        return playConditionDao;
+    }
+
+    public SongDao getSongDao() {
+        return songDao;
     }
 
     public AlbumListDao getAlbumListDao() {

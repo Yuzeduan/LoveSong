@@ -147,8 +147,8 @@ public class SongPopupWindow extends PopupWindow implements CommonAdapter.OnItem
     @Override
     public void OnItemViewClick(int position) {
         if(position != mPosition){
-            mBottomPlayFragment.getmSongList().remove(position);
             mSongList.remove(position);
+            mBottomPlayFragment.setmSongList(mSongList);
             mAdapter.setmDatas(mSongList);
             mListSize--;
             if(position < mPosition){

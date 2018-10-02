@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,20 +32,17 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
     private SongListAdapter mAdapter;
     private List<SearchSongList> mSearchSongList;
     private int mPageNo = 2;
-    private int time;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        Log.d("SongFragment", "onCreate: "+"调用了");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        Log.d("SongFragment", "onDestroy: "+"调用了");
     }
 
     @Override
@@ -63,11 +59,6 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
 
     @Override
     protected void lazyLoad() {
-        if(isPrepared && isVisible && time == 0) {
-            Log.d("SongFragment", "lazyLoad: " + mSearchMsg);
-            mPresenter.getData(mSearchMsg,1);
-            time++;
-        }
     }
 
     @Override
@@ -90,7 +81,7 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
         }else {
             if(list != null){
                 mSearchSongList.addAll(list);
-                mAdapter.setDataChange(list);
+                mAdapter.setmDatas(mSearchSongList);
             }
         }
         initAdapterEvent();
@@ -126,8 +117,9 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
 
     @Subscribe(threadMode = ThreadMode.MainThread,sticky = true)
     public void getSearchMessageEvent(SearchMessageEvent event){
-        mSearchMsg = event.getmSearchMessage();
-        EventBus.getDefault().removeStickyEvent(event);
-        Log.d("SongFragment", "getSearchMessageEvent: "+mSearchMsg);
+        mSearchMsg = event.getmSearchMessage();mPresenter.getData(mSearchMsg,1);
+        if(mSearchSongList != null){
+            mSearchSongList.clear();
+        }
     }
 }

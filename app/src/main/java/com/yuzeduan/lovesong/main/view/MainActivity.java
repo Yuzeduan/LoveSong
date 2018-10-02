@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -17,7 +19,11 @@ import com.yuzeduan.lovesong.R;
 import com.yuzeduan.lovesong.base.BaseActivity;
 import com.yuzeduan.lovesong.local.view.LocFragment;
 import com.yuzeduan.lovesong.main.adapter.FragAdapter;
+import com.yuzeduan.lovesong.main.db.PlayConditiondao;
+import com.yuzeduan.lovesong.main.db.Songdao;
+import com.yuzeduan.lovesong.main.model.MainModel;
 import com.yuzeduan.lovesong.music.bean.Song;
+import com.yuzeduan.lovesong.music.bean.playCondition;
 import com.yuzeduan.lovesong.music.event.MusicConditionEvent;
 import com.yuzeduan.lovesong.music.view.BottomPlayFragment;
 import com.yuzeduan.lovesong.recommend.view.RecFragment;
@@ -39,11 +45,18 @@ public class MainActivity extends BaseActivity {
     private FrameLayout mBottomLayout;
     private BottomPlayFragment mBottomFragment;
     private MusicConditionEvent mLastEvent; // 记录前一次的事件的信息
+    private MainModel mMainModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mMainModel.saveData(mBottomFragment.getPlayerCondition());
     }
 
     @Override
@@ -53,11 +66,21 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     protected void initVariables() {
         List<Fragment> mFragments = new ArrayList<>();
         mFragments.add(new RecFragment());
         mFragments.add(new LocFragment());
         mFragAdapter = new FragAdapter(getSupportFragmentManager(), mFragments);
+        mMainModel = new MainModel();
     }
 
     @Override
@@ -80,7 +103,13 @@ public class MainActivity extends BaseActivity {
      * 打开主活动时候,根据缓存的播放列表是否有歌曲,展示播放栏
      */
     private void initBottomFragment() {
-        mBottomFragment = new BottomPlayFragment();
+        MusicConditionEvent event;
+        if((event = mMainModel.getSavedEvent()) != null){
+            mBottomFragment = BottomPlayFragment.getInstance(event);
+            mBottomFragment.setFirst(true);
+        }else{
+            mBottomFragment = new BottomPlayFragment();
+        }
         replaceFragment(mBottomFragment);
     }
 
