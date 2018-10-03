@@ -179,7 +179,6 @@ public class AlbumListActivity extends MVPActivity<MVPContract.IAlbumView, Album
             mBottomPlayFragment.setConditionEvent(event);
         }
         mLastEvent = event;
-        EventBus.getDefault().removeStickyEvent(event);
     }
 
     /**

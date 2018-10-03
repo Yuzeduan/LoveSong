@@ -12,7 +12,8 @@ import com.yuzeduan.lovesong.aidl.IMusicManager;
 
 import java.io.IOException;
 
-public class MusicService extends Service {
+
+public class MusicService extends Service implements MediaPlayer.OnCompletionListener{
 
     private MediaPlayer mPlayer;
     private Binder mBinder = new IMusicManager.Stub() {
@@ -37,12 +38,10 @@ public class MusicService extends Service {
                 Log.e("MusicService", Log.getStackTraceString(e));
             }
         }
-
         @Override
         public void setMusic(String songAddress) throws RemoteException {
             try {
-                mPlayer.release();
-                mPlayer = new MediaPlayer();
+                mPlayer.reset();
                 mPlayer.setDataSource(songAddress);
                 mPlayer.prepare();
             } catch (IOException e) {
@@ -60,6 +59,7 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
         mPlayer = new MediaPlayer();
+        mPlayer.setOnCompletionListener(this);
     }
 
     @Override
@@ -68,10 +68,17 @@ public class MusicService extends Service {
     }
 
     @Override
-    public boolean onUnbind(Intent intent) {
+    public void onDestroy() {
+        super.onDestroy();
         if (mPlayer != null) {
+            mPlayer.stop();
             mPlayer.release();
         }
-        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        Intent intent = new Intent("com.yuzeduan.lovesong.nextmusic");
+        sendBroadcast(intent);
     }
 }

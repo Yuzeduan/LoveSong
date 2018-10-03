@@ -159,7 +159,6 @@ public class SongListActivity extends MVPActivity<MVPContract.ISongView, SongPre
             mBottomPlayFragment.setConditionEvent(event);
         }
         mLastEvent = event;
-        EventBus.getDefault().removeStickyEvent(event);
     }
 
     private void replaceFragment(Fragment fragment){

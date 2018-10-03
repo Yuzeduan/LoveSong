@@ -48,8 +48,8 @@ public class MainActivity extends BaseActivity {
     private MainModel mMainModel;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onStart() {
+        super.onStart();
         EventBus.getDefault().register(this);
     }
 
@@ -57,11 +57,6 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         mMainModel.saveData(mBottomFragment.getPlayerCondition());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 

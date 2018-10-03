@@ -1,5 +1,9 @@
 package com.yuzeduan.lovesong.music.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -49,6 +53,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     private MusicManager mMusicManager;
     private boolean isFirst;
     private Song mFirstSong;
+    private SongCompleteReceiver mSongCompleteReceiver;
 
     /**
      * 根据传进的音乐播放栏的状态构建出新的播放栏
@@ -70,6 +75,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         initView();
         initEvent();
         initData();
+        initBroadcastReceiver();
         return mView;
     }
 
@@ -95,6 +101,26 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         if(bundle != null){
             MusicConditionEvent conditionEvent =(MusicConditionEvent) bundle.getSerializable("condition");
             setConditionEvent(conditionEvent);
+        }
+    }
+
+    /**
+     * 注册广播接收器,用于接收播放歌曲完毕,自动进行播放下一首歌
+     */
+    private void initBroadcastReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.yuzeduan.lovesong.nextmusic");
+        mSongCompleteReceiver = new SongCompleteReceiver();
+        if(getContext() != null){
+            getContext().registerReceiver(mSongCompleteReceiver, intentFilter);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(getContext() != null){
+            getContext().unregisterReceiver(mSongCompleteReceiver);
         }
     }
 
@@ -202,6 +228,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         mNextIbn.setOnClickListener(this);
         mListIbn.setOnClickListener(this);
         mCbPlay.setOnCheckedChangeListener(this);
+
     }
 
     /**
@@ -278,6 +305,17 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * 用于接收歌曲播放播放完毕的广播接收器
+     */
+    class SongCompleteReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            isFirst = false;
+            checkNextSong();
+            Log.d("NextSong", "onReceive: "+"收到广播了");
+        }
+    }
     public MusicManager getmMusicManager() {
         return mMusicManager;
     }
