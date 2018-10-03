@@ -85,7 +85,7 @@ public class SongPopupWindow extends PopupWindow implements CommonAdapter.OnItem
         String text = null;
         switch (mPlayMode){
             case LIST_PLAY:
-                text = StringConcatUtil.concatString("列表播放 ","( ",mListSize+" )");
+                text = StringConcatUtil.concatString("列表循环 ","( ",mListSize+" )");
                 break;
             case RANDOM_PLAY:
                 text = StringConcatUtil.concatString("随机播放 ","( ",mListSize+" )");

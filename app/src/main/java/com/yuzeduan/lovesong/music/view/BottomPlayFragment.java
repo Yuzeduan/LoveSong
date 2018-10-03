@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NavigationRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,7 +48,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     private RelativeLayout mFooterLayout;
     private ImageView mPicIv;
     private TextView mSongNameTv, mSongAuthorTv;
-    private ImageButton mNextIbn, mListIbn;
+    private ImageButton mNextIbn, mListIbn, mPreviousIbn;
     private CheckBox mCbPlay;
     private List<Song> mSongList;
     private int mPosition;
@@ -87,6 +90,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         mCbPlay = mView.findViewById(R.id.play_ibn);
         mNextIbn = mView.findViewById(R.id.next_ibn);
         mListIbn = mView.findViewById(R.id.list_ibn);
+        mPreviousIbn = mView.findViewById(R.id.previous_ibn);
         mPosition = 0;
         mPlayMode = LIST_PLAY;
         mSongList = new ArrayList<>();
@@ -227,12 +231,12 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         mFooterLayout.setOnClickListener(this);
         mNextIbn.setOnClickListener(this);
         mListIbn.setOnClickListener(this);
+        mPreviousIbn.setOnClickListener(this);
         mCbPlay.setOnCheckedChangeListener(this);
-
     }
 
     /**
-     * 点击下一首的时候,状态栏的变化
+     * 更换播放的歌曲
      * @param song
      */
     public void showNextSong(Song song){
@@ -249,6 +253,10 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
             case R.id.next_ibn:
                 isFirst = false;
                 checkNextSong();
+                break;
+            case R.id.previous_ibn:
+                isFirst = false;
+                checkPreviousSong();
                 break;
             case R.id.list_ibn:
                 initPopupWindow();
@@ -279,6 +287,29 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * 点击上一首歌曲的时候,选择播放的歌曲
+     */
+    private void checkPreviousSong(){
+        switch (mPlayMode){
+            case LIST_PLAY:
+                if(mPosition == 0){
+                    mPosition = mSongList.size() - 1;
+                }else{
+                    mPosition--;
+                }
+                break;
+            case RANDOM_PLAY:
+                mPosition = (int) (Math.random() * mSongList.size() - 1);
+                break;
+            case ONE_CICAL:
+                break;
+        }
+        if(mSongList.size() > 0){
+            showNextSong(mSongList.get(mPosition));
+        }
+
+    }
     private void initPopupWindow() {
         SongPopupWindow mSongPopupWindow = new SongPopupWindow(getActivity(), this, mSongList);
         mSongPopupWindow.setAnimationStyle(R.style.popwin_anim_style);
@@ -316,6 +347,14 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
             Log.d("NextSong", "onReceive: "+"收到广播了");
         }
     }
+
+    private static class NotificationHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg) {
+
+        }
+    }
+
     public MusicManager getmMusicManager() {
         return mMusicManager;
     }
