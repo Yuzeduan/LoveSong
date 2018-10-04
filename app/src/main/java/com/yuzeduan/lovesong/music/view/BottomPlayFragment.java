@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NavigationRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -44,6 +43,8 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     public static final int LIST_PLAY = 0;
     public static final int RANDOM_PLAY = 1;
     public static final int ONE_CICAL = 2;
+    private static final int INIT_NOTIFICATION = 1;
+    private static final int CANCEL_NOTIFICATION = 2;
     private View mView;
     private RelativeLayout mFooterLayout;
     private ImageView mPicIv;
@@ -57,6 +58,8 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     private boolean isFirst;
     private Song mFirstSong;
     private SongCompleteReceiver mSongCompleteReceiver;
+    private NotificationHandler mHandler;
+    private Song mSong;
 
     /**
      * 根据传进的音乐播放栏的状态构建出新的播放栏
@@ -95,6 +98,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         mPlayMode = LIST_PLAY;
         mSongList = new ArrayList<>();
         mMusicManager = MusicManager.getInstance();
+        mHandler = new NotificationHandler();
     }
 
     /**
@@ -202,10 +206,13 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     private void showView(Song song, int flag){
         mSongNameTv.setText(song.getmSongName());
         mSongAuthorTv.setText(song.getmArtist());
+        mSong = song;
         if(mCbPlay.isChecked()){
             mMusicManager.onPlayMusic();
+            mHandler.sendMessage(initMessage(song));
         }else if(flag == 1){
             mCbPlay.setChecked(true);
+            mHandler.sendMessage(initMessage(song));
         }
         if(song.isLocal()){
             Bitmap bitmap = LocalMusicUtil.getLocalityMusicBitmap(song.getmSongId(), song.getmSmallPicPath(), 150);
@@ -329,10 +336,13 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
             if(isFirst){
                 mMusicManager.setSong(mFirstSong.getmSongAddress());
                 isFirst = false;
+                mHandler.sendMessage(initMessage(mFirstSong));
             }
             mMusicManager.onPlayMusic();
+            mHandler.sendMessage(initMessage(mSong));
         }else {
             mMusicManager.onPauseMusic();
+            mHandler.sendMessage(initMessage(null));
         }
     }
 
@@ -344,15 +354,39 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
         public void onReceive(Context context, Intent intent) {
             isFirst = false;
             checkNextSong();
-            Log.d("NextSong", "onReceive: "+"收到广播了");
         }
     }
 
     private static class NotificationHandler extends Handler{
+        NotificationView view = new NotificationView();
+
         @Override
         public void handleMessage(Message msg) {
-
+            switch (msg.what){
+                case INIT_NOTIFICATION:
+                    view.initNotification((Song)msg.obj, 1);
+                    break;
+                case CANCEL_NOTIFICATION:
+                    view.initNotification(null, 0);
+                    break;
+            }
         }
+    }
+
+    /**
+     * 根据song对象是否为空,使message带不同的信息
+     * @param song
+     * @return
+     */
+    private Message initMessage(Song song){
+        Message message = Message.obtain();
+        if(song != null){
+            message.what = INIT_NOTIFICATION;
+            message.obj = song;
+        }else{
+            message.what = CANCEL_NOTIFICATION;
+        }
+        return message;
     }
 
     public MusicManager getmMusicManager() {
