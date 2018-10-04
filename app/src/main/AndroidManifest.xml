@@ -14,8 +14,7 @@
         android:roundIcon="@drawable/ic_lovesong"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.view.MainActivity">
-        </activity>
+        <activity android:name=".main.view.MainActivity"></activity>
         <activity android:name=".recommend.view.BannerDetailActivity" />
         <activity android:name=".search.view.SearchActivity" />
         <activity
@@ -31,15 +30,16 @@
             android:name=".music.service.MusicService"
             android:enabled="true"
             android:exported="true"
-            android:process=":remote">
-        </service>
+            android:process=":remote"></service>
 
         <activity android:name=".welcome.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".music.view.MusicMainActivity"></activity>
     </application>
 
 </manifest>

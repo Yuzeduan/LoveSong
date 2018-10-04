@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".music.view.MusicMainActivity">
+
+    <RelativeLayout
+        android:id="@+id/song_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/title_bar">
+        <ImageButton
+            android:id="@+id/back_ibn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_back"
+            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="4dp">
+        </ImageButton>
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@id/back_ibn"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="年少有为"/>
+
+        <TextView
+            android:id="@+id/artist_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:layout_alignStart="@id/name_tv"
+            android:layout_below="@id/name_tv"
+            android:layout_marginTop="3dp"
+            android:text="李荣浩" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/song_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true">
+        <ImageView
+            android:id="@+id/playmode_iv"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/ic_list_play"/>
+
+        <ImageButton
+            android:id="@+id/previous_ibn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_toEndOf="@id/playmode_iv"
+            android:layout_alignBottom="@id/playmode_iv"
+            android:layout_marginStart="50dp"
+            android:background="@drawable/ic_previous_other"/>
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/play_ibn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/play_selector_other"
+            android:layout_centerInParent="true"
+            android:button="@null"
+            android:checked="false"/>
+
+        <ImageButton
+            android:id="@+id/next_ibn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_toEndOf="@id/play_ibn"
+            android:layout_alignBottom="@id/previous_ibn"
+            android:layout_marginStart="24dp"
+            android:background="@drawable/ic_next_other"/>
+
+        <ImageButton
+            android:id="@+id/list_ibn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_toEndOf="@id/next_ibn"
+            android:layout_alignBottom="@id/previous_ibn"
+            android:layout_marginStart="36dp"
+            android:background="@drawable/ic_list_other"/>
+    </RelativeLayout>
+
+    <SeekBar
+        android:id="@+id/song_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/song_bottom_layout"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="15dp"/>
+
+</RelativeLayout>

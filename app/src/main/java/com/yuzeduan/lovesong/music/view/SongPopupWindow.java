@@ -1,13 +1,8 @@
 package com.yuzeduan.lovesong.music.view;
 
-import android.support.v7.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

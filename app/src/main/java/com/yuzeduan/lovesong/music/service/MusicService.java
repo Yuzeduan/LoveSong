@@ -50,9 +50,22 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         }
 
         @Override
-        public void setCurrDuration(long songCurrTime) throws RemoteException {
+        public void setCurrDuration(int songCurrTime) throws RemoteException {
+            if (songCurrTime < 0 || songCurrTime > mPlayer.getDuration() || !mPlayer.isPlaying()) {
+                return;
+            }
+            mPlayer.seekTo(songCurrTime);
         }
 
+        @Override
+        public int getCurrentPosition() throws RemoteException {
+            return mPlayer.getCurrentPosition();
+        }
+
+        @Override
+        public int getDuration() throws RemoteException {
+            return mPlayer.getDuration();
+        }
     };
 
     @Override

@@ -94,11 +94,36 @@ public class MusicManager {
      * 设置跳转到歌曲的某个时间点
      * @param currDuration 跳转到的时间点
      */
-    public void setCurrDuration(long currDuration){
+    public void setCurrDuration(int currDuration){
         try {
             mPlayManager.setCurrDuration(currDuration);
         } catch (RemoteException e) {
             Log.e("MusicManager", Log.getStackTraceString(e));
+        }
+    }
+
+    /**
+     * 获取歌曲播放的时间点
+     */
+    public int getCurrentTime(){
+        try {
+            return mPlayManager.getCurrentPosition();
+        } catch (RemoteException e) {
+            Log.e("MusicManager", Log.getStackTraceString(e));
+            return 0;
+        }
+    }
+
+    /**
+     * 获取播放的歌曲的时长
+     * @return
+     */
+    public int getDurtion(){
+        try {
+            return mPlayManager.getDuration();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 }

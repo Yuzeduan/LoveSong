@@ -13,8 +13,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:titleTextAppearance="@style/toolbar.title"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:navigationIcon="@drawable/ic_back"
-        >
+        app:navigationIcon="@drawable/ic_back">
 
         <TextView
             android:id="@+id/tv_title"
@@ -23,8 +22,7 @@
             android:layout_gravity="center"
             android:text="@string/lovesong"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
     </android.support.v7.widget.Toolbar>
 
 </RelativeLayout>

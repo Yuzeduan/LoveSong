@@ -7,5 +7,7 @@ interface IMusicManager {
     void onStart();
     void onPause();
     void setMusic(String address);
-    void setCurrDuration(long songCurrTime);
+    void setCurrDuration(int songCurrTime);
+    int getDuration();
+    int getCurrentPosition();
 }

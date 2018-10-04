@@ -55,17 +55,17 @@ public class NotificationView {
                 Bitmap bitmap = LocalMusicUtil.getLocalityMusicBitmap(song.getmSongId(), song.getmSmallPicPath(), 150);
                 mBuilder.setLargeIcon(bitmap);
             }else{
-                SimpleTarget<Bitmap> target = new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        if(resource != null) {
+                if(!song.getmSmallPicPath().equals("")){
+                    SimpleTarget<Bitmap> target = new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             mBuilder.setLargeIcon(resource);
-                        }else {
-                            mBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_lovesong ));
                         }
-                    }
-                };
-                Glide.with(mContext).load(song.getmSmallPicPath()).asBitmap().into(target);
+                    };
+                    Glide.with(mContext).load(song.getmSmallPicPath()).asBitmap().into(target);
+                }else{
+                    mBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_lovesong));
+                }
             }
             mBuilder.setContentTitle(song.getmSongName());
             mBuilder.setContentText(song.getmArtist());

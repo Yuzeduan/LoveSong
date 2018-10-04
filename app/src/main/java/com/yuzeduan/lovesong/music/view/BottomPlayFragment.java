@@ -11,7 +11,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +33,8 @@ import com.yuzeduan.lovesong.util.WindowUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * author: Allen
@@ -218,7 +219,11 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
             Bitmap bitmap = LocalMusicUtil.getLocalityMusicBitmap(song.getmSongId(), song.getmSmallPicPath(), 150);
             mPicIv.setImageBitmap(bitmap);
         }else{
-            Glide.with(getContext()).load(song.getmSmallPicPath()).into(mPicIv);
+            if(song.getmSmallPicPath().equals("")){
+                mPicIv.setImageResource(R.drawable.ic_lovesong);
+            }else{
+                Glide.with(getContext()).load(song.getmSmallPicPath()).into(mPicIv);
+            }
         }
     }
 
@@ -255,7 +260,9 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.footer_layout:
-                //展示播放主界面
+                EventBus.getDefault().postSticky(this);
+                Intent intent = new Intent(getContext(), MusicMainActivity.class);
+                startActivity(intent);
                 break;
             case R.id.next_ibn:
                 isFirst = false;
@@ -274,7 +281,7 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     /**
      *根据播放模式,选择点击下一首时播放的歌曲
      */
-    private void checkNextSong() {
+    public Song checkNextSong() {
         switch(mPlayMode){
             case LIST_PLAY:
                 if(mSongList.size() > mPosition + 1){
@@ -290,14 +297,17 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
                 break;
         }
         if(mSongList.size() > 0){
-            showNextSong(mSongList.get(mPosition));
+            Song song = mSongList.get(mPosition);
+            showNextSong(song);
+            return song;
         }
+        return null;
     }
 
     /**
      * 点击上一首歌曲的时候,选择播放的歌曲
      */
-    private void checkPreviousSong(){
+    public Song checkPreviousSong(){
         switch (mPlayMode){
             case LIST_PLAY:
                 if(mPosition == 0){
@@ -313,9 +323,11 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
                 break;
         }
         if(mSongList.size() > 0){
-            showNextSong(mSongList.get(mPosition));
+            Song song = mSongList.get(mPosition);
+            showNextSong(song);
+            return song;
         }
-
+        return null;
     }
     private void initPopupWindow() {
         SongPopupWindow mSongPopupWindow = new SongPopupWindow(getActivity(), this, mSongList);
@@ -420,4 +432,13 @@ public class BottomPlayFragment extends Fragment implements View.OnClickListener
     public void setFirst(boolean first) {
         isFirst = first;
     }
+
+    public Song getmSong() {
+        return mSong;
+    }
+
+    public CheckBox getmCbPlay() {
+        return mCbPlay;
+    }
+
 }
