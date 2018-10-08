@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PorterDuff;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -21,10 +19,18 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.yuzeduan.lovesong.R;
+import com.yuzeduan.lovesong.base.MVPActivity;
+import com.yuzeduan.lovesong.music.MVPContract;
 import com.yuzeduan.lovesong.music.MusicManager;
+import com.yuzeduan.lovesong.music.bean.LrcEntity;
 import com.yuzeduan.lovesong.music.bean.Song;
+import com.yuzeduan.lovesong.music.event.MusicConditionEvent;
+import com.yuzeduan.lovesong.music.presenter.LrcPresenter;
+import com.yuzeduan.lovesong.util.LocalMusicUtil;
 import com.yuzeduan.lovesong.util.WindowUtil;
+import com.yuzeduan.lovesong.widget.LrcView;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,11 +41,11 @@ import static com.yuzeduan.lovesong.music.view.BottomPlayFragment.LIST_PLAY;
 import static com.yuzeduan.lovesong.music.view.BottomPlayFragment.ONE_CICAL;
 import static com.yuzeduan.lovesong.music.view.BottomPlayFragment.RANDOM_PLAY;
 
-public class MusicMainActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener{
+public class MusicMainActivity extends MVPActivity<MVPContract.IView, LrcPresenter> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, MVPContract.IView{
     private SeekBar mSeekBar;
     private ImageButton mNextIbn, mListIbn, mPreviousIbn, mBackIbn;
     private ImageView mPlayModeIv;
-    private TextView mNameTv, mArtistTv;
+    private TextView mNameTv, mArtistTv, mCurrentTimeTv, mAllTimeTv;
     private CheckBox mCbPlay, mFragmentCbPlay;
     private BottomPlayFragment mBottomPlayFragment;
     private Song mSong;
@@ -47,6 +53,9 @@ public class MusicMainActivity extends AppCompatActivity implements View.OnClick
     private SongCompleteReceiver mSongCompleteReceiver;
     private RelativeLayout mFooterLayout;
     private MusicManager mMusicManager;
+    private Timer mTimer;
+    private boolean mControlled;  //记录是由该活动点击切换上下首歌
+    private LrcView mLrcView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +66,9 @@ public class MusicMainActivity extends AppCompatActivity implements View.OnClick
         initEvent();
         initBroadcastReceiver();
         initTimer();
+        initSeekBar();
+        initTitle();
+        initPlayModeView(mPlayMode);
     }
 
     private void init() {
@@ -67,17 +79,60 @@ public class MusicMainActivity extends AppCompatActivity implements View.OnClick
         mBackIbn = findViewById(R.id.back_ibn);
         mNameTv = findViewById(R.id.name_tv);
         mArtistTv = findViewById(R.id.artist_tv);
+        mCurrentTimeTv = findViewById(R.id.time_tv);
+        mAllTimeTv = findViewById(R.id.all_time_tv);
         mPlayModeIv = findViewById(R.id.playmode_iv);
         mCbPlay = findViewById(R.id.play_ibn);
         mFooterLayout = findViewById(R.id.song_bottom_layout);
+        mLrcView = findViewById(R.id.lrcview);
+        mLrcView.setmListener(new LrcView.LrcViewSeekListener() {
+            @Override
+            public void onLrcSeek(int position, LrcEntity entity) {
+                if(mMusicManager.isPlaying()){
+                    long time = entity.getmTimeLong();
+                    mSeekBar.setProgress((int)time);
+                    mMusicManager.setCurrDuration((int)time);
+                }
+            }
+        });
         mSong = mBottomPlayFragment.getmSong();
         mPlayMode = mBottomPlayFragment.getmPlayMode();
         mFragmentCbPlay = mBottomPlayFragment.getmCbPlay();
         mCbPlay.setChecked(mFragmentCbPlay.isChecked());
         mMusicManager = mBottomPlayFragment.getmMusicManager();
-        initSeekBar();
-        initTitle();
-        initPlayModeView(mPlayMode);
+    }
+
+
+    @Override
+    protected MusicConditionEvent getMusicCondition() {
+        return null;
+    }
+
+    @Override
+    protected void initVariables() {
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+    }
+
+    @Override
+    public void showLrc(List<LrcEntity> list) {
+        mLrcView.setmLrcList(list);
+    }
+
+    public void getData(Song song){
+        String mLrcLinkPath;
+        if(song != null && (mLrcLinkPath = song.getmLrcLink()) != null){
+            mPresenter.getData(mLrcLinkPath);
+        }else{
+            mLrcView.setmLrcList(null);
+        }
+    }
+
+    @Override
+    protected LrcPresenter createPresenter() {
+        return new LrcPresenter();
     }
 
     private void initEvent() {
@@ -125,19 +180,27 @@ public class MusicMainActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initTimer() {
-        Timer timer = new Timer();
+        mTimer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if(mCbPlay.isChecked()){
-                    int progress = mMusicManager.getCurrentTime();
-                    int total = mMusicManager.getDurtion();
+                if(mMusicManager.isPlaying()){
+                    final int progress = mMusicManager.getCurrentTime();
+                    final int total = mMusicManager.getDuration();
                     mSeekBar.setMax(total);
                     mSeekBar.setProgress(progress);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mCurrentTimeTv.setText(LocalMusicUtil.formatTime(progress));
+                            mAllTimeTv.setText(LocalMusicUtil.formatTime(total));
+                            mLrcView.seekLrcToTime(progress); //滚动歌词
+                        }
+                    });
                 }
             }
         };
-        timer.schedule(task, 1000,1000);
+        mTimer.schedule(task, 100,1000);
     }
 
     @Override
@@ -146,12 +209,18 @@ public class MusicMainActivity extends AppCompatActivity implements View.OnClick
             case R.id.next_ibn:
                 mBottomPlayFragment.setFirst(false);
                 mSong = mBottomPlayFragment.checkNextSong();
+                mControlled = true;
+                mCbPlay.setChecked(true);
                 initTitle();
+                getData(mSong);
                 break;
             case R.id.previous_ibn:
                 mBottomPlayFragment.setFirst(false);
                 mSong = mBottomPlayFragment.checkPreviousSong();
+                mControlled = true;
+                mCbPlay.setChecked(true);
                 initTitle();
+                getData(mSong);
                 break;
             case R.id.list_ibn:
                 initPopupWindow();
@@ -196,15 +265,28 @@ public class MusicMainActivity extends AppCompatActivity implements View.OnClick
                 WindowUtil.lightOnWindow(MusicMainActivity.this);
             }
         });
+        mSongPopupWindow.setmListener(new OnClickWindowItemListener() {
+            @Override
+            public void onClick(Song song) {
+                mSong = song;
+                initTitle();
+                mControlled = true;
+                mCbPlay.setChecked(true);
+                getData(mSong);
+            }
+        });
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if(b){
-            mFragmentCbPlay.setChecked(true);
+            if(!mControlled){
+                mFragmentCbPlay.setChecked(true);
+            }
             mSeekBar.setEnabled(true);
         }else{
             mFragmentCbPlay.setChecked(false);
+            mControlled = false;
             mSeekBar.setEnabled(false);
         }
     }
@@ -219,6 +301,7 @@ public class MusicMainActivity extends AppCompatActivity implements View.OnClick
     @Subscribe(sticky = true)
     public void getBottomEvent(BottomPlayFragment event){
         mBottomPlayFragment = event;
+        getData(event.getmSong());
     }
 
     class SongCompleteReceiver extends BroadcastReceiver {
@@ -227,7 +310,15 @@ public class MusicMainActivity extends AppCompatActivity implements View.OnClick
             mSong = mBottomPlayFragment.checkNextSong();
             if(mSong != null){
                 initTitle();
+                getData(mSong);
             }
         }
+    }
+
+    /**
+     * 点击了popupWindow的子项时候,更新Activity的回调接口
+     */
+    public interface OnClickWindowItemListener{
+        void onClick(Song song);
     }
 }

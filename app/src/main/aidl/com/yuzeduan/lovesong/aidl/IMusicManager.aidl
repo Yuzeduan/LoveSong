@@ -10,4 +10,5 @@ interface IMusicManager {
     void setCurrDuration(int songCurrTime);
     int getDuration();
     int getCurrentPosition();
+    boolean isPlaying();
 }

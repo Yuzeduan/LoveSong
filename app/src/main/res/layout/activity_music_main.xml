@@ -98,13 +98,45 @@
             android:background="@drawable/ic_list_other"/>
     </RelativeLayout>
 
-    <SeekBar
-        android:id="@+id/song_seekbar"
+    <com.yuzeduan.lovesong.widget.LrcView
+        android:id="@+id/lrcview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/song_top_layout"
+        android:layout_above="@id/seekbar_layout"/>
+
+    <RelativeLayout
+        android:id="@+id/seekbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/song_bottom_layout"
-        android:layout_marginEnd="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_above="@id/song_bottom_layout">
+
+        <TextView
+            android:id="@+id/time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="8dp"
+            android:textColor="@color/lightgrey"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="4dp"/>
+
+        <SeekBar
+            android:id="@+id/song_seekbar"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/time_tv"
+            android:layout_marginBottom="15dp"/>
+
+        <TextView
+            android:id="@+id/all_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/song_seekbar"
+            android:textSize="8dp"
+            android:textColor="@color/lightgrey"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="15dp"/>
+    </RelativeLayout>
+
 
 </RelativeLayout>

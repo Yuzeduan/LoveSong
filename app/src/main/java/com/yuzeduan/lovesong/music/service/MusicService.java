@@ -24,7 +24,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                     mPlayer.start();
                 }
             } catch (Exception e) {
-                Log.e("PlayerManagerService", Log.getStackTraceString(e));
+                Log.e("MusicService", Log.getStackTraceString(e));
             }
         }
 
@@ -51,20 +51,44 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
         @Override
         public void setCurrDuration(int songCurrTime) throws RemoteException {
-            if (songCurrTime < 0 || songCurrTime > mPlayer.getDuration() || !mPlayer.isPlaying()) {
-                return;
+            try {
+                if (songCurrTime < 0 || songCurrTime > mPlayer.getDuration() || !mPlayer.isPlaying()) {
+                    return;
+                }
+                mPlayer.seekTo(songCurrTime);
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
             }
-            mPlayer.seekTo(songCurrTime);
         }
 
         @Override
         public int getCurrentPosition() throws RemoteException {
-            return mPlayer.getCurrentPosition();
+            try {
+                return mPlayer.getCurrentPosition();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
         }
 
         @Override
         public int getDuration() throws RemoteException {
-            return mPlayer.getDuration();
+            try {
+                return mPlayer.getDuration();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
+        }
+
+        @Override
+        public boolean isPlaying() throws RemoteException {
+            try {
+                return mPlayer.isPlaying();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     };
 

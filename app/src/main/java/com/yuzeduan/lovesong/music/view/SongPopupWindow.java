@@ -43,6 +43,7 @@ public class SongPopupWindow extends PopupWindow implements CommonAdapter.OnItem
     private int mPlayMode;
     private int mListSize;
     private PopHandler mPopHandler;
+    private MusicMainActivity.OnClickWindowItemListener mListener;
 
     SongPopupWindow(Context mContext, BottomPlayFragment mBottomPlayFragment, List<Song> mSongList) {
         this.mContext = mContext;
@@ -136,6 +137,9 @@ public class SongPopupWindow extends PopupWindow implements CommonAdapter.OnItem
             Song song = mSongList.get(position);
             mBottomPlayFragment.showNextSong(song);
             mBottomPlayFragment.setmPosition(position);
+            if(mListener != null){
+                mListener.onClick(song);
+            }
         }
     }
 
@@ -154,9 +158,10 @@ public class SongPopupWindow extends PopupWindow implements CommonAdapter.OnItem
         }
     }
 
-    /**
-     *
-     */
+    public void setmListener(MusicMainActivity.OnClickWindowItemListener mListener) {
+        this.mListener = mListener;
+    }
+
     public static class PopHandler extends Handler{
         private WeakReference<SongPopupWindow> reference;
 

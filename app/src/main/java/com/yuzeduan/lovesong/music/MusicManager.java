@@ -118,12 +118,25 @@ public class MusicManager {
      * 获取播放的歌曲的时长
      * @return
      */
-    public int getDurtion(){
+    public int getDuration(){
         try {
             return mPlayManager.getDuration();
         } catch (RemoteException e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    /**
+     * 判断Mediaplayer是否处于播放状态
+     * @return
+     */
+    public boolean isPlaying(){
+        try {
+            return mPlayManager.isPlaying();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

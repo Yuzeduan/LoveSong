@@ -18,11 +18,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         initView(savedInstanceState);
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
-        EventBus.getDefault().postSticky(getMusicCondition());
+        if(getMusicCondition() != null){
+            EventBus.getDefault().postSticky(getMusicCondition());
+        }
     }
 
     // 获取当前播放栏的状态,传递给下个活动
