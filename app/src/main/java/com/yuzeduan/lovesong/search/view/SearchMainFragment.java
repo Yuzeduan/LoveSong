@@ -48,6 +48,9 @@ public class SearchMainFragment extends Fragment{
         mFragments.add(new ArtistListFragment());
         mFragments.add(new AlbumListFragment());
         mFragments.add(new SearchNullFragment());
+        mFragments.add(new SearchNullFragment());
+        mFragments.add(new SearchNullFragment());
+        mFragments.add(new SearchNullFragment());
     }
 
     private void initView() {

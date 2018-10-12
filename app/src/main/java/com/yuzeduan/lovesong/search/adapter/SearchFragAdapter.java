@@ -25,8 +25,14 @@ public class SearchFragAdapter extends FragmentPagerAdapter {
                 return mFragments.get(1);
             case 2:
                 return mFragments.get(2);
-            default:
+            case 3:
                 return mFragments.get(3);
+            case 4:
+                return mFragments.get(4);
+            case 5:
+                return mFragments.get(5);
+            default:
+                return mFragments.get(6);
         }
     }
 
