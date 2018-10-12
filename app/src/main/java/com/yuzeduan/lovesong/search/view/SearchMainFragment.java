@@ -5,14 +5,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.yuzeduan.lovesong.R;
 import com.yuzeduan.lovesong.search.adapter.SearchFragAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * author: Allen
@@ -22,29 +26,46 @@ public class SearchMainFragment extends Fragment{
     private View mView;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    private List<Fragment> mFragments;
+    private SearchFragAdapter mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(mView == null){
             mView = inflater.inflate(R.layout.fragment_search_main, container, false);
-            Log.d("SearchMainFragment", "onCreateView: "+"创建主界面的view");
         }
         mViewPager = mView.findViewById(R.id.search_vp);
         mTabLayout = mView.findViewById(R.id.search_tablayout);
-        Log.d("SearchMainFragment", "onCreateView: "+"创建了搜索主界面");
+        initValiables();
         initView();
         return mView;
     }
 
+    private void initValiables() {
+        mFragments = new ArrayList<>();
+        mFragments.add(new SongListFragment());
+        mFragments.add(new ArtistListFragment());
+        mFragments.add(new AlbumListFragment());
+        mFragments.add(new SearchNullFragment());
+    }
+
     private void initView() {
-        mViewPager.setAdapter(new SearchFragAdapter(getActivity().getSupportFragmentManager()));
+        mAdapter = new SearchFragAdapter(getActivity().getSupportFragmentManager(), mFragments);
+        mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("SearchMainFragment", "onDestroy: "+"调用了");
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        if(mAdapter.getmFragments() != null){
+            for(Fragment item : mAdapter.getmFragments()){
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.remove(item);
+                transaction.commit();
+            }
+        }
     }
 }

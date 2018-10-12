@@ -181,6 +181,8 @@ public class LrcView extends View {
                 if (mDisplayMode == DISPLAY_MODE_SEEK) {
                     //高亮手指抬起时的歌词并播放从该句歌词开始播放
                     seekLrc(mHighLightRow, true);
+                    mLrcShowMode = (mLrcShowMode+1)%2;
+                    invalidate();
                 }
                 mDisplayMode = DISPLAY_MODE_NORMAL;
                 invalidate();

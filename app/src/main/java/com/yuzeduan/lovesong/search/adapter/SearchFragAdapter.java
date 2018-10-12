@@ -4,31 +4,29 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
+import android.view.ViewGroup;
 
-import com.yuzeduan.lovesong.search.view.AlbumListFragment;
-import com.yuzeduan.lovesong.search.view.ArtistListFragment;
-import com.yuzeduan.lovesong.search.view.SearchNullFragment;
-import com.yuzeduan.lovesong.search.view.SongListFragment;
+import java.util.List;
 
 public class SearchFragAdapter extends FragmentPagerAdapter {
+    private List<Fragment> mFragments;
 
-    public SearchFragAdapter(FragmentManager fm) {
+    public SearchFragAdapter(FragmentManager fm, List<Fragment>  fragments) {
         super(fm);
-        Log.d("SearchFragAdapter", "SearchFragAdapter: "+"创建adapter");
+        mFragments = fragments;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new SongListFragment();
+                return mFragments.get(0);
             case 1:
-                return new ArtistListFragment();
+                return mFragments.get(1);
             case 2:
-                return new AlbumListFragment();
+                return mFragments.get(2);
             default:
-                return new SearchNullFragment();
+                return mFragments.get(3);
         }
     }
 
@@ -36,6 +34,12 @@ public class SearchFragAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return 7;
     }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
+    }
+
 
     @Nullable
     @Override
@@ -58,5 +62,9 @@ public class SearchFragAdapter extends FragmentPagerAdapter {
             default:
                 return null;
         }
+    }
+
+    public List<Fragment> getmFragments() {
+        return mFragments;
     }
 }

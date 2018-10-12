@@ -51,7 +51,8 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
     }
 
     @Override
-    protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected View initView(LayoutInflater inflater,
+                            ViewGroup container, Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.fragment_search, container, false);
         mSongListRv = mView.findViewById(R.id.search_rv);
         return mView;
@@ -88,6 +89,7 @@ public class SongListFragment extends BaseFragment<MVPContract.ISongView, SongPr
     }
 
     private void initAdapterEvent() {
+
         mAdapter.setmOnLoadMoreListener(new CommonAdapter.onLoadMoreListener() {
             @Override
             public void onLoadMore() {
