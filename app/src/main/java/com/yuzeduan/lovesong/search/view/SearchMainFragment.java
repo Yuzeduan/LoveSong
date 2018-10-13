@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,18 +58,5 @@ public class SearchMainFragment extends Fragment{
         mAdapter = new SearchFragAdapter(getActivity().getSupportFragmentManager(), mFragments);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        if(mAdapter.getmFragments() != null){
-            for(Fragment item : mAdapter.getmFragments()){
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.remove(item);
-                transaction.commit();
-            }
-        }
     }
 }

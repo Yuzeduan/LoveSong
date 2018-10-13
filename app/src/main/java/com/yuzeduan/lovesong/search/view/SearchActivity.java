@@ -34,7 +34,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     private BottomPlayFragment mBottomPlayFragment;
     private FrameLayout mBottomLayout;
     private MusicConditionEvent mLastEvent;
-    private boolean isReplace;
+    private SearchMainFragment mMainFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     protected void initVariables() {
+        mMainFragment = new SearchMainFragment();
     }
 
     @Override
@@ -81,20 +82,13 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        if(!isReplace){
-            replaceFragment(R.id.below_flt, new SearchMainFragment());
-            isReplace = true;
-        }
+        replaceFragment(R.id.below_flt, mMainFragment);
         EventBus.getDefault().postSticky(new SearchMessageEvent(s));
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
-        if(s.equals("")) {
-            replaceFragment(R.id.below_flt, new HotWordFragment());
-            isReplace = false;
-        }
         return false;
     }
 
